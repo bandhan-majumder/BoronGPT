@@ -1,0 +1,2 @@
+export const ANTHROPIC_MODEL_NAME=process.env.ANTHROPIC_MODEL_NAME
+export const ANTHROPIC_API_KEY=process.env.ANTHROPIC_API_KEY
