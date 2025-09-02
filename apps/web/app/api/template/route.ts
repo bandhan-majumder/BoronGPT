@@ -1,19 +1,19 @@
-import { getAnthropicInstance } from '../../lib/anthropic';
-import { BASE_PROMPT } from '../../prompts/prompt';
-import { basePrompt as nodeBasePrompt } from '../../prompts/base/node';
-import { basePrompt as reactBasePrompt } from '../../prompts/base/react';
+import { getAnthropicInstance } from '../../../lib/anthropic';
+import { BASE_PROMPT } from '../../../prompts/prompt';
+import { basePrompt as nodeBasePrompt } from '../../../prompts/base/node';
+import { basePrompt as reactBasePrompt } from '../../../prompts/base/react';
 import type { TextBlock } from "@anthropic-ai/sdk/resources";
 import { NextResponse } from 'next/server';
-import { ANTHROPIC_MODEL_NAME } from '../../lib/config';
+import { ANTHROPIC_MODEL_NAME } from '../../../lib/config';
 
 export async function POST(req: Request) {
   try {
     const { prompt } = await req.json();
     const anthropic = getAnthropicInstance();
-    
+
     const response = await anthropic.messages.create({
       messages: [{
-        role: 'user', 
+        role: 'user',
         content: prompt
       }],
       model: ANTHROPIC_MODEL_NAME!,
@@ -22,7 +22,7 @@ export async function POST(req: Request) {
     });
 
     const answer = (response.content[0] as TextBlock).text;
-    
+
     if (answer === "react") {
       return NextResponse.json({
         prompts: [BASE_PROMPT, `Here is an artifact that contains all files of the project visible to you.\nConsider the contents of ALL files in the project.\n\n${reactBasePrompt}\n\nHere is a list of files that exist on the file system but are not being shown to you:\n\n  - .gitignore\n  - package-lock.json\n`],
@@ -38,9 +38,9 @@ export async function POST(req: Request) {
     }
 
     return NextResponse.json({ message: "You cant access this" });
-    
+
   } catch (error) {
     console.error('Template API error:', error);
-    return NextResponse.json({ message: 'Internal server error' });
+    return NextResponse.json({ message: 'Internal server error' }, { status: 500 });
   }
 }

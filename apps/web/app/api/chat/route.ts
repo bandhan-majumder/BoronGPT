@@ -1,6 +1,6 @@
-import { getAnthropicInstance } from '../../lib/anthropic';
-import { ANTHROPIC_MODEL_NAME } from '../../lib/config';
-import { getSystemPrompt } from '../../prompts/prompt';
+import { getAnthropicInstance } from '../../../lib/anthropic';
+import { ANTHROPIC_MODEL_NAME } from '../../../lib/config';
+import { getSystemPrompt } from '../../../prompts/prompt';
 import type { TextBlock } from "@anthropic-ai/sdk/resources";
 import { NextResponse } from 'next/server';
 
