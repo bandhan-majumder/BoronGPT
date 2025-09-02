@@ -16,7 +16,7 @@ export default function Home() {
   const handleSend = () => {
     // store the prompt with zustand
     setPrompt({ prompt: message });
-    router.push(`/playground?prompt=${message}`);
+    router.push(`/playground`);
   }
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
