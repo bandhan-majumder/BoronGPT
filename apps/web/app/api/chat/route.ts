@@ -1,6 +1,6 @@
 import { getAnthropicInstance } from '../../../lib/anthropic';
 import { ANTHROPIC_MODEL_NAME } from '../../../lib/config';
-import { getSystemPrompt } from '../../../prompts/prompt';
+import { getSystemPrompt } from '../../../prompts';
 import type { TextBlock } from "@anthropic-ai/sdk/resources";
 import { NextResponse } from 'next/server';
 
@@ -13,7 +13,7 @@ export async function POST(req: Request) {
       messages: messages,
       model: ANTHROPIC_MODEL_NAME!,
       max_tokens: 50,
-      system: getSystemPrompt()
+      system: JSON.stringify(getSystemPrompt())
     });
 
     console.log(response);

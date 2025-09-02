@@ -1,7 +1,7 @@
 import { getAnthropicInstance } from '../../../lib/anthropic';
-import { BASE_PROMPT } from '../../../prompts/prompt';
-import { basePrompt as nodeBasePrompt } from '../../../prompts/base/node';
-import { basePrompt as reactBasePrompt } from '../../../prompts/base/react';
+import { BASE_PROMPT } from '../../../prompts';
+import { basePromptAsJson as nodeBasePrompt } from '../../../prompts/base/node';
+import { basePromptAsJson as reactBasePrompt } from '../../../prompts/base/react';
 import type { TextBlock } from "@anthropic-ai/sdk/resources";
 import { NextResponse } from 'next/server';
 import { ANTHROPIC_MODEL_NAME } from '../../../lib/config';
