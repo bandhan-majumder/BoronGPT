@@ -5,15 +5,15 @@ import EditorScreen from '../../components/screen/EditorScreen'
 import { usePromptStore } from '../../providers/prompt-store-provider'
 import { useCreateApp } from '../../hooks/query/useCreateApp';
 import { useRouter } from 'next/navigation';
-import { processResponse } from '../../hooks/useConvertSteps';
+import { FailedParsedResponseInterface, processResponse, SuccessFulParsedResponseInterface } from '../../hooks/useConvertSteps';
 
 function PlayGround() {
   const router = useRouter();
   const { prompt } = usePromptStore(
     (state) => state,
   )
-  
-  const [steps, setSteps] = useState<any>(null);
+
+  const [steps, setSteps] = useState<SuccessFulParsedResponseInterface | null>(null);
   const [processingError, setProcessingError] = useState<string | null>(null);
 
   // if user is manually coming here, redirect them to home screen
@@ -29,8 +29,10 @@ function PlayGround() {
     async function processData() {
       if (data) {
         try {
-          const processedSteps = await processResponse(data);
-          setSteps(processedSteps);
+          const processedSteps: SuccessFulParsedResponseInterface | FailedParsedResponseInterface = await processResponse(data);
+          if ('metadata' in processedSteps && processedSteps.steps.length > 0) {
+            setSteps(processedSteps);
+          }
         } catch (err) {
           console.error('Error processing response:', err);
           setProcessingError(err instanceof Error ? err.message : 'Unknown error');
@@ -47,7 +49,7 @@ function PlayGround() {
 
   return (
     <div>
-      <EditorScreen />
+      <EditorScreen steps={steps}/>
     </div>
   )
 }

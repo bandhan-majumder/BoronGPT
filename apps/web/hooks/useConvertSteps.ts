@@ -23,14 +23,14 @@ interface StepsInterface {
   action: ProcessState // by default every action will be of pending state
 }
 
-interface SuccessFulParsedResponseInterface {
+export interface SuccessFulParsedResponseInterface {
   steps: StepsInterface[],
   metadata: {
     totalSteps: number,
   }
 }
 
-interface FailedParsedResponseInterface {
+export interface FailedParsedResponseInterface {
   error: any,
   steps: []
 }
