@@ -11,12 +11,10 @@ export async function POST(req: Request) {
     
     const response = await anthropic.messages.create({
       messages: messages,
-      model: ANTHROPIC_MODEL_NAME!,
+      model: ANTHROPIC_MODEL_NAME || "claude-3-5-sonnet-20241022",
       max_tokens: 50,
       system: JSON.stringify(getSystemPrompt())
     });
-
-    console.log(response);
 
     return NextResponse.json({
       response: (response.content[0] as TextBlock)?.text

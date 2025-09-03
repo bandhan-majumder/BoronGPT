@@ -16,7 +16,7 @@ export async function POST(req: Request) {
         role: 'user',
         content: prompt
       }],
-      model: ANTHROPIC_MODEL_NAME!,
+      model: ANTHROPIC_MODEL_NAME || "claude-3-5-haiku-latest",
       max_tokens: 50,
       system: "Return either node or react based on what do you think this project should be. Only return a single word either 'node' or 'react'. Do not return anything extra"
     });

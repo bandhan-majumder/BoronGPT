@@ -1,113 +1,143 @@
-interface Step {
-  type: "file" | "shell";
-  code: string;
-  runnableCommand: string;
-  status: "pending";
-  filePath?: string; 
+/*
+* Helper function to convert the API response to a structured format of steps. Steps are having this properties;
+* type - "file" | "shell"
+* filePath - "<file_path>" - optional as shell commands does not have file path
+* content - "<command_content>"
+*/
+
+// enum actionType {
+//   file,
+//   shell
+// }
+
+export enum ProcessState {
+  pending,
+  completed,
+  onGoing
 }
 
-interface BoronAction {
-  type: "file" | "shell";
-  filePath?: string;
-  content: any;
+interface StepsInterface {
+  type: string, // it should be limited to actionType, but for now, it's a string
+  content: string,
+  filePath?: string // optional
+  action: ProcessState // by default every action will be of pending state
 }
 
-interface ClaudeMessage {
-  id: string;
-  type: string;
-  role: string;
-  model: string;
-  content: Array<{
-    type: string;
-    text: string;
-  }>;
-  stop_reason: string;
-  stop_sequence: any;
-  usage: any;
+interface SuccessFulParsedResponseInterface {
+  steps: StepsInterface[],
+  metadata: {
+    totalSteps: number,
+  }
 }
 
-function parseMessageToSteps(message: ClaudeMessage): Step[] {
-  const steps: Step[] = [];
-  
+interface FailedParsedResponseInterface {
+  error: any,
+  steps: []
+}
+
+function parseBoronActions(response: any): SuccessFulParsedResponseInterface | FailedParsedResponseInterface {
   try {
-    const textContent = message.content.find(c => c.type === 'text')?.text || '';
-    
-    const jsonMatch = textContent.match(/\{[\s\S]*"boronActions"[\s\S]*?\]/);
-    
-    if (!jsonMatch) {
-      console.warn('No boronActions found in the message');
-      return steps;
+    let parsedData;
+    let textContent = '';
+
+    if (response && response.boronActions && Array.isArray(response.boronActions)) {
+      parsedData = response;
     }
-    
-    // Find the complete JSON object
-    let jsonStr = '';
-    let braceCount = 0;
-    let startFound = false;
-    
-    for (let i = 0; i < textContent.length; i++) {
-      const char = textContent[i];
-      
-      if (char === '{' && !startFound) {
-        startFound = true;
-        jsonStr += char;
-        braceCount = 1;
-      } else if (startFound) {
-        jsonStr += char;
-        
-        if (char === '{') {
-          braceCount++;
-        } else if (char === '}') {
+    else if (response && response.response && typeof response.response === 'string') {
+      textContent = response.response;
+    }
+    else if (typeof response === 'string') {
+      textContent = response;
+    }
+    else {
+      throw new Error('Invalid response format: expected string or object with boronActions');
+    }
+
+    if (textContent && !parsedData) {
+      const startIndex = textContent.indexOf('{');
+      if (startIndex === -1) {
+        throw new Error('No JSON object found in response');
+      }
+
+      let braceCount = 0;
+      let endIndex = -1;
+      for (let i = startIndex; i < textContent.length; i++) {
+        if (textContent[i] === '{') braceCount++;
+        if (textContent[i] === '}') {
           braceCount--;
-          
           if (braceCount === 0) {
+            endIndex = i;
             break;
           }
         }
       }
-    }
-    
-    if (!jsonStr) {
-      console.warn('Could not extract complete JSON from message');
-      return steps;
-    }
-    
-    // Parse the JSON
-    const parsedData = JSON.parse(jsonStr);
-    
-    if (!parsedData.boronActions || !Array.isArray(parsedData.boronActions)) {
-      console.warn('boronActions not found or not an array');
-      return steps;
-    }
-    
-    // Convert each boronAction to a step
-    parsedData.boronActions.forEach((action: BoronAction, index: number) => {
-      if (action.type === 'file') {
-        steps.push({
-          type: 'file',
-          code: typeof action.content === 'string' 
-            ? action.content 
-            : JSON.stringify(action.content, null, 2),
-          runnableCommand: '',
-          status: 'pending',
-          filePath: action.filePath
-        });
-      } else if (action.type === 'shell') {
-        steps.push({
-          type: 'shell',
-          code: '',
-          runnableCommand: typeof action.content === 'string' 
-            ? action.content 
-            : String(action.content),
-          status: 'pending'
-        });
+
+      if (endIndex === -1) {
+        throw new Error('No matching closing brace found for JSON object');
       }
+
+      const jsonString = textContent.substring(startIndex, endIndex + 1);
+      try {
+        parsedData = JSON.parse(jsonString);
+      } catch (parseError) {
+        throw new Error(`Failed to parse extracted JSON: ${parseError instanceof Error ? parseError.message : 'Unknown error'}`);
+      }
+    }
+
+    if (!parsedData.boronActions || !Array.isArray(parsedData.boronActions)) {
+      throw new Error('boronActions is not a valid array in the parsed data');
+    }
+
+    const steps = parsedData.boronActions.map((action: any, index: number) => {
+
+      if (!action.type || (action.type !== 'file' && action.type !== 'shell')) {
+        throw new Error(`Invalid type at action ${index}: must be 'file' or 'shell'`);
+      }
+
+      if (!action.content) {
+        throw new Error(`Missing content at action ${index}`);
+      }
+
+      const step: any = {
+        type: action.type,
+        content: typeof action.content === 'object'
+          ? JSON.stringify(action.content, null, 2)
+          : action.content
+      };
+
+      if (action.type === 'file') {
+        if (!action.filePath) {
+          throw new Error(`Missing filePath for file action at index ${index}`);
+        }
+        step.filePath = action.filePath;
+      }
+
+      return step;
     });
-    
+
+    const result = {
+      steps: steps,
+      metadata: {
+        totalSteps: steps.length,
+      }
+    };
+
+    return result;
+
   } catch (error) {
-    console.error('Error parsing Claude message:', error);
+    return {
+      error: error instanceof Error ? error.message : 'An unknown error occurred',
+      steps: [],
+    };
   }
-  
-  return steps;
 }
 
-export { parseMessageToSteps, type Step, type ClaudeMessage };
+export async function processResponse(response: any) {
+  try {
+    const result = parseBoronActions(response);
+    return result;
+  } catch (error) {
+    console.error('Error processing response:', error);
+    throw error;
+  }
+}
