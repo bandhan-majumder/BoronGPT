@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
+import { Actor } from 'next/font/google'
 import "./globals.css";
 import { Providers } from "../providers";
 
@@ -12,6 +13,11 @@ const geistMono = localFont({
   variable: "--font-geist-mono",
 });
 
+const actor = Actor({
+  subsets: ['latin'],
+  weight: "400"
+})
+
 export const metadata: Metadata = {
   title: "BoronGPT",
   description: "A gpt wrapper that lets you build, edit and preview MVPs inside browser",
@@ -23,8 +29,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body className={`${geistSans.variable} ${geistMono.variable}`}>
+    <html lang="en"  className={actor.className}>
+      <body>
         <Providers>
           {children}
         </Providers>

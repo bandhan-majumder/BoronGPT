@@ -5,6 +5,7 @@ import EditorScreen from '../../components/screen/EditorScreen'
 import { usePromptStore } from '../../providers/prompt-store-provider'
 import { useCreateApp } from '../../hooks/query/useCreateApp';
 import { useRouter } from 'next/navigation';
+import { parseMessageToSteps } from '../../hooks/useConvertSteps';
 
 function PlayGround() {
   const router = useRouter();
@@ -18,6 +19,9 @@ function PlayGround() {
   }
 
   const { data, error, isLoading } = useCreateApp({ prompt });
+  const steps = parseMessageToSteps(data);
+
+  console.log("Steps are: ", steps);
 
   if (isLoading) return <div>Loading...</div>
   if (error) return <div>Error: {error.message}</div>

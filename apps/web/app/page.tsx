@@ -1,18 +1,43 @@
 "use client";
 
 import { Button, Textarea } from '@repo/ui/index'
-import { Plus, Send } from 'lucide-react'
+import { ArrowUp, Plus } from 'lucide-react'
 import { useState, useRef, useEffect } from 'react'
 import { useRouter } from 'next/navigation';
 import { usePromptStore } from '../providers/prompt-store-provider'
 
 export default function Home() {
   const [message, setMessage] = useState<string>('');
+  const [greeting, setGreeting] = useState<string>('Welcome');
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const router = useRouter();
   const { setPrompt } = usePromptStore(
     (state) => state,
   )
+
+  // Set greeting based on current time
+  useEffect(() => {
+    const updateGreeting = () => {
+      const now = new Date();
+      const hour = now.getHours();
+
+      if (hour >= 5 && hour < 12) {
+        setGreeting('Good morning');
+      } else if (hour >= 12 && hour < 17) {
+        setGreeting('Good afternoon');
+      } else if (hour >= 17 && hour < 21) {
+        setGreeting('Good evening');
+      } else {
+        setGreeting('Good late night');
+      }
+    };
+
+    updateGreeting();
+
+    const interval = setInterval(updateGreeting, 60000);
+
+    return () => clearInterval(interval);
+  }, []);
 
   const handleSend = () => {
     // store the prompt with zustand
@@ -45,7 +70,7 @@ export default function Home() {
 
           <div className="text-center space-y-2">
             <h1 className="text-4xl font-light text-gray-100">
-              Good afternoon, Bandhan
+              {greeting}, Bandhan
             </h1>
           </div>
 
@@ -55,17 +80,21 @@ export default function Home() {
                 <Button
                   variant="ghost"
                   size="icon"
-                  className="text-gray-400 hover:text-white hover:bg-gray-700 rounded-full mt-1" 
+                  className="text-gray-400 hover:text-white hover:bg-gray-700 rounded-full mt-1"
                 >
                   <Plus className="h-5 w-5" />
                 </Button>
 
                 <Textarea
                   ref={textareaRef}
+                  style={{
+                    overflow: 'auto',
+                    scrollbarWidth: 'none'
+                  }}
                   value={message}
                   onChange={(e) => setMessage(e.target.value)}
                   onKeyDown={handleKeyPress}
-                  placeholder="Message Claude..."
+                  placeholder="Build me an app..."
                   className="flex-1 bg-transparent border-none focus:ring-0 text-white placeholder-gray-400 text-lg p-0 outline-none resize-none min-h-[24px] max-h-32 overflow-y-auto leading-6"
                   rows={1}
                 />
@@ -80,9 +109,9 @@ export default function Home() {
                   onClick={handleSend}
                   disabled={!message.trim()}
                   size="icon"
-                  className="bg-orange-500 hover:bg-orange-600 text-white rounded-full h-8 w-8 disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="bg-orange-500 hover:bg-orange-600 text-white rounded-lg h-8 w-8 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  <Send className="h-4 w-4" />
+                  <ArrowUp className="h-4 w-4" />
                 </Button>
               </div>
             </div>

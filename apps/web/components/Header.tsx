@@ -5,7 +5,6 @@ import { Eye, Settings, Share2 } from 'lucide-react';
 
 export default function Header() {
   const handlePreview = () => {
-    // In a real implementation, this would open the preview
     window.open('/preview', '_blank');
   };
 
