@@ -1,11 +1,12 @@
 "use client";
 
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, Suspense } from 'react'
 import EditorScreen from '../../components/screen/EditorScreen'
 import { usePromptStore } from '../../providers/prompt-store-provider'
 import { useCreateApp } from '../../hooks/query/useCreateApp';
 import { useRouter } from 'next/navigation';
 import { FailedParsedResponseInterface, processResponse, SuccessFulParsedResponseInterface } from '../../hooks/useConvertSteps';
+import Loading from '../loading';
 
 function PlayGround() {
   const router = useRouter();
@@ -48,9 +49,9 @@ function PlayGround() {
   if (processingError) return <div>Processing Error: {processingError}</div>
 
   return (
-    <div>
-      <EditorScreen steps={steps}/>
-    </div>
+    <Suspense fallback={<Loading />}>
+      {steps && <EditorScreen steps={steps} />}
+    </Suspense>
   )
 }
 

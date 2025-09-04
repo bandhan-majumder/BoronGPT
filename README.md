@@ -2,7 +2,7 @@
 
 #### Ask it to build apps and it will build it from end to end
 
-![home page](/assets/image.png)
+![logo](/assets/boron.svg)
 
 ### Dev Setup
 ```

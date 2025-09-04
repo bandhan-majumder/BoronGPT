@@ -12,10 +12,10 @@
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.60.0",
-    "@monaco-editor/react": "^4.7.0",
     "@repo/ui": "workspace:*",
     "@tanstack/react-query": "^5.85.8",
     "@types/axios": "^0.14.4",
+    "@webcontainer/api": "^1.6.1",
     "axios": "^1.11.0",
     "clsx": "^2.1.1",
     "ioredis": "^5.7.0",
