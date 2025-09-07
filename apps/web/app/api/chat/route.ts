@@ -13,23 +13,23 @@ export async function POST(req: Request) {
     const systemPrompt = JSON.stringify(getSystemPrompt());
 
     // Try to get cached response first
-    const cachedResponse = await cacheService.getCachedResponse(
-      messages,
-      model,
-      systemPrompt,
-      maxTokens,
-      {
-        keyPrefix: 'chat',
-        ttl: 3600 // 1 hour cache
-      }
-    );
+    // const cachedResponse = await cacheService.getCachedResponse(
+    //   messages,
+    //   model,
+    //   systemPrompt,
+    //   maxTokens,
+    //   {
+    //     keyPrefix: 'chat',
+    //     ttl: 3600 // 1 hour cache
+    //   }
+    // );
 
-    if (cachedResponse) {
-      return NextResponse.json({
-        response: cachedResponse,
-        cached: true
-      });
-    }
+    // if (cachedResponse) {
+    //   return NextResponse.json({
+    //     response: cachedResponse,
+    //     cached: true
+    //   });
+    // }
 
     // If no cache hit, make API call
     const anthropic = getAnthropicInstance();
@@ -44,19 +44,19 @@ export async function POST(req: Request) {
     const responseText = (response.content[0] as TextBlock)?.text;
 
     // Cache the response for future similar queries
-    if (responseText) {
-      await cacheService.setCachedResponse(
-        messages,
-        model,
-        systemPrompt,
-        maxTokens,
-        responseText,
-        {
-          keyPrefix: 'chat',
-          ttl: 3600 // 1 hour cache
-        }
-      );
-    }
+    // if (responseText) {
+    //   await cacheService.setCachedResponse(
+    //     messages,
+    //     model,
+    //     systemPrompt,
+    //     maxTokens,
+    //     responseText,
+    //     {
+    //       keyPrefix: 'chat',
+    //       ttl: 3600 // 1 hour cache
+    //     }
+    //   );
+    // }
 
     return NextResponse.json({
       response: responseText,

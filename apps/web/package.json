@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.60.0",
+    "@monaco-editor/react": "^4.7.0",
     "@repo/ui": "workspace:*",
     "@tanstack/react-query": "^5.85.8",
     "@types/axios": "^0.14.4",

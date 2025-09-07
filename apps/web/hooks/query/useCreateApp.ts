@@ -2,6 +2,7 @@
 
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
+import { useMemo } from "react";
 
 interface Message {
   role: "user" | "assistant";
@@ -21,48 +22,84 @@ export function useCreateApp({ prompt }: { prompt: string }) {
       if (response.status === 500) {
         throw new Error("Internal Server Error");
       }
-      return response.data;
+      return response.data.response;
     },
-    enabled: !!prompt, // Only run if prompt exists
+    enabled: !!prompt,
+    // Prevent unnecessary refetches
+    staleTime: 5 * 60 * 1000, // 5 minutes - data stays fresh
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
+    refetchOnMount: false,
     retry(failureCount, error) {
       if (failureCount < 3) {
-        return true; // Retry up to 3 times
+        return true;
       }
       return false;
     },
   });
 
-  // Prepare messages for the second query
-  const messages: Message[] = [];
-  if (initialData) {
+  // Memoize messages to prevent unnecessary re-computation and query key changes
+  const messages = useMemo((): Message[] => {
+    if (!initialData?.prompts) {
+      return [];
+    }
+
     const promptMessages = initialData.prompts.map((promptText: string) => ({
       role: "user" as const,
       content: promptText
     }));
-    messages.push(...promptMessages);
-    messages.push({ role: "user", content: prompt });
-  }
+    
+    return [
+      ...promptMessages,
+      { role: "user", content: prompt }
+    ];
+  }, [initialData?.prompts, prompt]);
 
-  // Second query - only runs when we have initialData
+  // Create a stable query key for the messages
+  const messagesQueryKey = useMemo(() => {
+    if (messages.length === 0) return ["chat", "empty"];
+    
+    // Create a stable key based on message contents
+    const messageHash = messages
+      .map(m => `${m.role}:${m.content}`)
+      .join("|");
+    
+    return ["chat", messageHash];
+  }, [messages]);
+
+  // Second query - only runs when we have initialData and messages
   const { 
     data: finalData, 
     error: finalError, 
     isLoading: finalIsLoading 
   } = useQuery({
-    queryKey: ["chat", messages],
+    queryKey: messagesQueryKey,
     queryFn: async () => {
       const response = await axios.post("/api/chat", { messages });
       if (response.status === 500) {
         throw new Error("Internal Server Error");
       }
-      return response.data;
+      return response.data.response;
     },
-    enabled: !!initialData && messages.length > 0, // Only run when we have initial data
+    enabled: !!initialData && messages.length > 0 && !initialError,
+    // Prevent unnecessary refetches
+    staleTime: 5 * 60 * 1000, // 5 minutes
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
+    refetchOnMount: false,
+    retry: 1, // Only retry once for the final query
   });
 
   return {
     data: finalData,
-    isLoading: initialIsLoading || finalIsLoading,
+    isLoading: initialIsLoading || (!!initialData && finalIsLoading),
     error: initialError || finalError,
+    // Add some debug info
+    debug: {
+      initialData: !!initialData,
+      messagesLength: messages.length,
+      initialIsLoading,
+      finalIsLoading,
+    }
   };
 }

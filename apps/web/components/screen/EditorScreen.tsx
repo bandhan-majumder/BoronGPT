@@ -1,140 +1,165 @@
 'use client';
 
-import { useState } from 'react';
-import Sidebar from '../Sidebar';
-import FileExplorer from '../FileExplorer';
-import CodeEditor from '../CodeEditor';
-import Header from '../Header';
-import { FileItem, Step } from "../../types/index";
+import React from 'react';
+import { useState, useEffect, useMemo } from 'react';
+import StepList from '../StepList';
+import { CodeEditor } from '../CodeEditor';
+import { FileItem, Step, StepAfterConvert } from "../../types/index";
+import { filterStepsToFiles, modifySteps } from '../../lib/step';
+import { useWebContainer } from '../../hooks/useWebcontainer';
+import { FileExplorer } from '../FileExplorer';
+import { TabView } from '../TabView';
+import { PreviewFrame } from '../PreviewFrame';
 
-const mockSteps: Step[] = [
-  {
-    id: '1',
-    title: 'Initialize Project',
-    description: 'Set up the basic project structure with TypeScript and Tailwind CSS',
-    status: 'completed',
-    files: ['package.json', 'tsconfig.json', 'tailwind.config.ts']
-  },
-  {
-    id: '2',
-    title: 'Create Components',
-    description: 'Build the main UI components for the application',
-    status: 'completed',
-    files: ['components/Header.tsx', 'components/Sidebar.tsx', 'components/FileExplorer.tsx']
-  },
-  {
-    id: '3',
-    title: 'Implement Code Editor',
-    description: 'Integrate Monaco editor for code editing functionality',
-    status: 'in-progress',
-    files: ['components/CodeEditor.tsx']
-  },
-  {
-    id: '4',
-    title: 'Add Preview Functionality',
-    description: 'Enable live preview of the application',
-    status: 'pending',
-    files: []
-  }
-];
+export default function EditorScreen({ initialSteps, prompt }: {
+  initialSteps: StepAfterConvert[]
+  prompt: string
+}) {
+  const [currentStep, setCurrentStep] = useState(1);
+  const [steps, setSteps] = useState<Step[]>([]);
+  const [files, setFiles] = useState<FileItem[]>([]);
+  const webcontainer = useWebContainer();
+  const [selectedFile, setSelectedFile] = useState<FileItem | null>(null);
+  const [activeTab, setActiveTab] = useState<'code' | 'preview'>('code');
 
-const mockFiles: FileItem[] = [
-  {
-    id: '1',
-    name: 'src',
-    type: 'folder',
-    isExpanded: true,
-    children: [
-      {
-        id: '2',
-        name: 'components',
-        type: 'folder',
-        isExpanded: true,
-        children: [
-          { id: '3', name: 'Header.tsx', type: 'file', content: `import React from 'react';\nimport { Button } from '@/components/ui/button';\n\nexport default function Header() {\n  return (\n    <header className="bg-white border-b">\n      <div className="px-4 py-3 flex items-center justify-between">\n        <h1 className="text-xl font-semibold">Bolt Clone</h1>\n        <Button>Preview</Button>\n      </div>\n    </header>\n  );\n}` },
-          { id: '4', name: 'Sidebar.tsx', type: 'file', content: `import React from 'react';\n\nexport default function Sidebar() {\n  return (\n    <aside className="w-80 bg-gray-50 border-r">\n      <div className="p-4">\n        <h2 className="font-semibold mb-4">Steps</h2>\n        {/* Steps content */}\n      </div>\n    </aside>\n  );\n}` },
-          { id: '5', name: 'FileExplorer.tsx', type: 'file', content: `import React from 'react';\n\nexport default function FileExplorer() {\n  return (\n    <div className="w-64 bg-gray-900 text-white">\n      <div className="p-4">\n        <h3 className="font-semibold mb-4">Files</h3>\n        {/* File tree */}\n      </div>\n    </div>\n  );\n}` }
-        ]
-      },
-      {
-        id: '6',
-        name: 'app',
-        type: 'folder',
-        isExpanded: false,
-        children: [
-          { id: '7', name: 'page.tsx', type: 'file', content: `export default function Home() {\n  return (\n    <div className="container mx-auto p-8">\n      <h1 className="text-4xl font-bold">Welcome to Bolt Clone</h1>\n    </div>\n  );\n}` },
-          { id: '8', name: 'layout.tsx', type: 'file', content: `import './globals.css';\n\nexport default function RootLayout({\n  children,\n}: {\n  children: React.ReactNode;\n}) {\n  return (\n    <html lang="en">\n      <body>{children}</body>\n    </html>\n  );\n}` }
-        ]
-      }
-    ]
-  },
-  {
-    id: '9',
-    name: 'package.json',
-    type: 'file',
-    content: `{\n  "name": "bolt-clone",\n  "version": "0.1.0",\n  "private": true,\n  "scripts": {\n    "dev": "next dev",\n    "build": "next build",\n    "start": "next start"\n  },\n  "dependencies": {\n    "next": "latest",\n    "react": "latest",\n    "react-dom": "latest"\n  }\n}`
-  }
-];
-
-export default function EditorScreen() {
-  //@ts-ignore
-  const [selectedFile, setSelectedFile] = useState<FileItem | null>(mockFiles[0].children?.[0]?.children?.[0] || null);
-  const [files, setFiles] = useState<FileItem[]>(mockFiles);
-
-  const toggleExpanded = (id: string) => {
-    const updateFiles = (items: FileItem[]): FileItem[] => {
-      return items.map(item => {
-        if (item.id === id) {
-          return { ...item, isExpanded: !item.isExpanded };
-        }
-        if (item.children) {
-          return { ...item, children: updateFiles(item.children) };
-        }
-        return item;
-      });
-    };
-    setFiles(updateFiles(files));
-  };
-
-  const updateFileContent = (id: string, content: string) => {
-    const updateFiles = (items: FileItem[]): FileItem[] => {
-      return items.map(item => {
-        if (item.id === id) {
-          return { ...item, content };
-        }
-        if (item.children) {
-          return { ...item, children: updateFiles(item.children) };
-        }
-        return item;
-      });
-    };
-    setFiles(updateFiles(files));
-    
-    if (selectedFile?.id === id) {
-      setSelectedFile({ ...selectedFile, content });
+  // Initialize files from initialSteps only once when component mounts
+  useEffect(() => {
+    const modifiedSteps = modifySteps(initialSteps);
+    setSteps(modifiedSteps);
+    const originalFiles = filterStepsToFiles(modifiedSteps);
+    if (originalFiles.length > 0) {
+      setFiles(originalFiles);
+      setSteps(prevSteps =>
+        prevSteps.map((s: Step) => ({
+          ...s,
+          status: "completed"
+        }))
+      );
     }
-  };
+  }, [initialSteps]); // Only depend on initialSteps
+
+  // webcontainer effect - only runs when files or webcontainer changes
+  useEffect(() => {
+    if (!webcontainer || files.length === 0) return;
+
+    const createMountStructure = (files: FileItem[]): Record<string, any> => {
+      const mountStructure: Record<string, any> = {};
+
+      const processFile = (file: FileItem, isRootFolder: boolean) => {
+        if (file.type === 'folder') {
+          // For folders, create a directory entry
+          mountStructure[file.name] = {
+            directory: file.children ?
+              Object.fromEntries(
+                file.children.map(child => [child.name, processFile(child, false)])
+              )
+              : {}
+          };
+        } else if (file.type === 'file') {
+          if (isRootFolder) {
+            mountStructure[file.name] = {
+              file: {
+                contents: file.content || ''
+              }
+            };
+          } else {
+            // For files, create a file entry with contents
+            return {
+              file: {
+                contents: file.content || ''
+              }
+            };
+          }
+        }
+
+        return mountStructure[file.name];
+      };
+
+      // Process each top-level file/folder
+      files.forEach(file => processFile(file, true));
+
+      return mountStructure;
+    };
+
+    const mountStructure = createMountStructure(files);
+    webcontainer.mount(mountStructure);
+  }, [files, webcontainer]);
+
+  // Memoize the PreviewFrame to prevent unnecessary re-renders
+  const previewFrame = useMemo(() => {
+    return webcontainer ? <PreviewFrame webContainer={webcontainer} files={files} /> : null;
+  }, [webcontainer, files]);
 
   return (
-    <div className="h-screen flex flex-col bg-white">
-      <Header />
-      
-      <div className="flex flex-1 overflow-hidden">
-        <Sidebar steps={mockSteps} />
-        
-        <div className="flex flex-1">
-          <FileExplorer 
-            files={files}
-            selectedFile={selectedFile}
-            onFileSelect={setSelectedFile}
-            onToggleExpanded={toggleExpanded}
-          />
-          
-          <div className="flex-1 flex flex-col">
-            <CodeEditor 
-              file={selectedFile}
-              onContentChange={updateFileContent}
+    <div className="min-h-screen bg-gray-900 flex flex-col">
+      <header className="bg-gray-800 border-b border-gray-700 px-6 py-4">
+        <h1 className="text-xl font-semibold text-gray-100">Website Builder</h1>
+        <p className="text-sm text-gray-400 mt-1">Prompt: {prompt}</p>
+      </header>
+
+      <div className="flex-1 overflow-hidden">
+        <div className="h-full grid grid-cols-4 gap-6 p-6">
+          <div className="col-span-1 space-y-6 overflow-auto">
+            <div>
+              <div className="h-[80vh]">
+                <StepList
+                  steps={steps}
+                  currentStep={currentStep}
+                  onSelectStep={setCurrentStep}
+                />
+              </div>
+              <div>
+                <div className='flex'>
+                  <br />
+                  {/* {(loading || !templateSet) && <Loader />}
+                  {!(loading || !templateSet) && <div className='flex'>
+                    <textarea value={userPrompt} onChange={(e) => {
+                    setPrompt(e.target.value)
+                  }} className='p-2 w-full'></textarea>
+                  <button onClick={async () => {
+                    const newMessage = {
+                      role: "user" as "user",
+                      content: userPrompt
+                    };
+
+                    setLoading(true);
+                    const stepsResponse = await axios.post(`${BACKEND_URL}/chat`, {
+                      messages: [...llmMessages, newMessage]
+                    });
+                    setLoading(false);
+
+                    setLlmMessages(x => [...x, newMessage]);
+                    setLlmMessages(x => [...x, {
+                      role: "assistant",
+                      content: stepsResponse.data.response
+                    }]);
+                    
+                    setSteps(s => [...s, ...parseXml(stepsResponse.data.response).map(x => ({
+                      ...x,
+                      status: "pending" as "pending"
+                    }))]);
+
+                  }} className='bg-purple-400 px-4'>Send</button>
+                  </div>} */}
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className="col-span-1">
+            <FileExplorer
+              files={files}
+              onFileSelect={setSelectedFile}
             />
+          </div>
+          <div className="col-span-2 bg-gray-900 rounded-lg shadow-lg p-4 h-[calc(100vh-8rem)]">
+            <TabView activeTab={activeTab} onTabChange={setActiveTab} />
+            <div className="h-[calc(100%-4rem)]">
+              {activeTab === 'code' ? (
+                <CodeEditor file={selectedFile} />
+              ) : (
+                previewFrame
+              )}
+            </div>
           </div>
         </div>
       </div>

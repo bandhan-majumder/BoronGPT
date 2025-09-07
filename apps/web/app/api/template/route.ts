@@ -13,27 +13,27 @@ export async function POST(req: Request) {
     const model = ANTHROPIC_MODEL_NAME || "claude-3-5-haiku-latest";
     const maxTokens = 50;
     const systemPrompt = "Return either node or react based on what do you think this project should be. Only return a single word either 'node' or 'react'. Do not return anything extra";
-    
+
     const messages = [{
       role: 'user' as const,
       content: prompt
     }];
 
-    // Try to get cached response first
-    const cachedResponse = await cacheService.getCachedResponse(
-      messages,
-      model,
-      systemPrompt,
-      maxTokens,
-      {
-        keyPrefix: 'template',
-        ttl: 7200 // 2 hours cache (template decisions are more stable)
-      }
-    );
+    // // Try to get cached response first
+    // const cachedResponse = await cacheService.getCachedResponse(
+    //   messages,
+    //   model,
+    //   systemPrompt,
+    //   maxTokens,
+    //   {
+    //     keyPrefix: 'template',
+    //     ttl: 7200 // 2 hours cache (template decisions are more stable)
+    //   }
+    // );
 
-    if (cachedResponse) {
-      return buildTemplateResponse(cachedResponse, true);
-    }
+    // if (cachedResponse) {
+    //   return buildTemplateResponse(cachedResponse, true);
+    // }
 
     // If no cache hit, make API call
     const anthropic = getAnthropicInstance();
@@ -47,20 +47,20 @@ export async function POST(req: Request) {
 
     const answer = (response.content[0] as TextBlock).text;
 
-    // Cache the response
-    if (answer) {
-      await cacheService.setCachedResponse(
-        messages,
-        model,
-        systemPrompt,
-        maxTokens,
-        answer,
-        {
-          keyPrefix: 'template',
-          ttl: 7200 // 2 hours cache
-        }
-      );
-    }
+    // // Cache the response
+    // if (answer) {
+    //   await cacheService.setCachedResponse(
+    //     messages,
+    //     model,
+    //     systemPrompt,
+    //     maxTokens,
+    //     answer,
+    //     {
+    //       keyPrefix: 'template',
+    //       ttl: 7200 // 2 hours cache
+    //     }
+    //   );
+    // }
 
     return buildTemplateResponse(answer, false);
 
@@ -73,19 +73,23 @@ export async function POST(req: Request) {
 function buildTemplateResponse(answer: string, cached: boolean) {
   if (answer === "react") {
     return NextResponse.json({
-      prompts: [BASE_PROMPT, `Here is an artifact that contains all files of the project visible to you.\nConsider the contents of ALL files in the project.\n\n${reactBasePrompt}\n\nHere is a list of files that exist on the file system but are not being shown to you:\n\n  - .gitignore\n  - package-lock.json\n`],
-      uiPrompts: [reactBasePrompt],
+      response: {
+        prompts: [BASE_PROMPT, `Here is an artifact that contains all files of the project visible to you.\nConsider the contents of ALL files in the project.\n\n${reactBasePrompt}\n\nHere is a list of files that exist on the file system but are not being shown to you:\n\n  - .gitignore\n  - package-lock.json\n`],
+        uiPrompts: [reactBasePrompt]
+      },
       cached
     });
   }
 
   if (answer === "node") {
     return NextResponse.json({
-      prompts: [`Here is an artifact that contains all files of the project visible to you.\nConsider the contents of ALL files in the project.\n\n${reactBasePrompt}\n\nHere is a list of files that exist on the file system but are not being shown to you:\n\n  - .gitignore\n  - package-lock.json\n`],
-      uiPrompts: [nodeBasePrompt],
+      response: {
+        prompts: [`Here is an artifact that contains all files of the project visible to you.\nConsider the contents of ALL files in the project.\n\n${reactBasePrompt}\n\nHere is a list of files that exist on the file system but are not being shown to you:\n\n  - .gitignore\n  - package-lock.json\n`],
+        uiPrompts: [nodeBasePrompt]
+      },
       cached
     });
   }
 
-  return NextResponse.json({ message: "You cant access this" });
+  return NextResponse.json({ message: "You cant access this" }, { status: 404 });
 }

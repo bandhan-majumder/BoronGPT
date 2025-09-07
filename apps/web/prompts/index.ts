@@ -4,6 +4,8 @@
 
 import { stripIndents } from "./helper/stripIndent";
 
+export const BASE_PROMPT = "For all designs I ask you to make, have them be beautiful, not cookie cutter. Make webpages that are fully featured and worthy for production.\n\nBy default, this template supports JSX syntax with Tailwind CSS classes, React hooks, and Lucide React for icons. Do not install other packages for UI themes, icons, etc unless absolutely necessary or I request them.\n\nUse icons from lucide-react for logos.\n\nUse stock photos from unsplash where appropriate, only valid URLs you know exist. Do not download the images, only link to them in image tags.\n\n";
+
 export const getSystemPrompt = () => {
     const prompt = getSystemPromptAsJson();
     return prompt;
@@ -11,7 +13,7 @@ export const getSystemPrompt = () => {
 
 const getSystemPromptAsJson = () => {
   const prompt = {
-    "basePrompt": "For all designs I ask you to make, have them be beautiful, not cookie cutter. Make webpages that are fully featured and worthy for production.\n\nBy default, this template supports JSX syntax with Tailwind CSS classes, React hooks, and Lucide React for icons. Do not install other packages for UI themes, icons, etc unless absolutely necessary or I request them.\n\nUse icons from lucide-react for logos.\n\nUse stock photos from unsplash where appropriate, only valid URLs you know exist. Do not download the images, only link to them in image tags.\n\n",
+    "basePrompt": BASE_PROMPT,
     "constants": {
       "workDirName": "project",
       "workDir": "/home/project",
@@ -95,6 +97,7 @@ const getSystemPromptAsJson = () => {
         }
       },
       "importantRules": [
+        "ALWAYS IMPORT React from React on top of every file that contains JSX!",
         "NEVER use the word \"artifact\" in user-facing explanations. For example: DO NOT SAY: \"This artifact sets up a simple Snake game using HTML, CSS, and JavaScript.\" INSTEAD SAY: \"We set up a simple Snake game using HTML, CSS, and JavaScript.\"",
         "IMPORTANT: Use valid markdown only for all your responses and DO NOT use HTML tags except for artifacts!",
         "ULTRA IMPORTANT: Do NOT be verbose and DO NOT explain anything unless the user is asking for more information.",
@@ -170,7 +173,7 @@ const getSystemPromptAsJson = () => {
               {
                 "type": "file",
                 "filePath": "src/App.jsx",
-                "content": "// bouncing ball React component..."
+                "content": "import React from 'react'; \n // bouncing ball React component..."
               },
               {
                 "type": "shell",
@@ -184,9 +187,7 @@ const getSystemPromptAsJson = () => {
     "continuePrompt": "Continue your prior response. IMPORTANT: Immediately begin from where you left off without any interruptions.\nDo not repeat any content, including boronActions."
   }
   return prompt;
-}
-
-export const BASE_PROMPT = "For all designs I ask you to make, have them be beautiful, not cookie cutter. Make webpages that are fully featured and worthy for production.\n\nBy default, this template supports JSX syntax with Tailwind CSS classes, React hooks, and Lucide React for icons. Do not install other packages for UI themes, icons, etc unless absolutely necessary or I request them.\n\nUse icons from lucide-react for logos.\n\nUse stock photos from unsplash where appropriate, only valid URLs you know exist. Do not download the images, only link to them in image tags.\n\n";
+};
 
 // const getSystemPromptAsXML = (cwd: string = WORK_DIR) => `
 // You are boron, an expert AI assistant and exceptional senior software developer with vast knowledge across multiple programming languages, frameworks, and best practices.

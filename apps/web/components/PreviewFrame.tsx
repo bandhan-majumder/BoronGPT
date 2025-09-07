@@ -1,0 +1,116 @@
+"use client";
+
+import { WebContainer } from '@webcontainer/api';
+import React, { useEffect, useState } from 'react';
+
+interface PreviewFrameProps {
+  files: any[];
+  webContainer: WebContainer;
+}
+
+export function PreviewFrame({ files, webContainer }: PreviewFrameProps) {
+  console.log("Inside previewframe");
+  const [url, setUrl] = useState("");
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  async function installDependencies() {
+    try {
+      const installProcess = await webContainer.spawn('npm', ['install']);
+
+      installProcess.output.pipeTo(
+        new WritableStream({
+          write(data) {
+            console.log(data);
+          }
+        })
+      );
+
+      // Wait for install command to exit (this was missing in your code)
+      const exitCode = await installProcess.exit;
+      
+      if (exitCode !== 0) {
+        throw new Error('Installation failed');
+      }
+
+      return exitCode;
+    } catch (err) {
+      console.error('Install error:', err);
+      throw err;
+    }
+  }
+
+  async function startDevServer() {
+    try {
+      // Start the dev server
+      await webContainer.spawn('npm', ['run', 'dev']);
+
+      console.log("Server is being ready");
+      
+      // Wait for server-ready event
+      webContainer.on('server-ready', (port, url) => {
+        console.log("server is ready....", url, port);
+        setUrl(url);
+        setIsLoading(false);
+      });
+    } catch (err) {
+      console.error('Dev server error:', err);
+      setError('Failed to start development server');
+      setIsLoading(false);
+    }
+  }
+
+  async function main() {
+    try {
+      setIsLoading(true);
+      setError(null);
+
+      // Install dependencies and wait for completion
+      const exitCode = await installDependencies();
+      
+      if (exitCode === 0) {
+        // Only start dev server if installation was successful
+        await startDevServer();
+      }
+
+    } catch (err) {
+      console.error('Setup error:', err);
+      setError('Failed to setup development environment');
+      setIsLoading(false);
+    }
+  }
+
+  useEffect(() => {
+    if (webContainer) {
+      main();
+    }
+  }, [webContainer]); 
+
+  if (error) {
+    return (
+      <div className="h-full flex items-center justify-center text-red-400">
+        <div className="text-center">
+          <p className="mb-2">Error: {error}</p>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="h-full flex items-center justify-center text-gray-400">
+      {isLoading && (
+        <div className="text-center">
+          <p className="mb-2">Loading development environment...</p>
+        </div>
+      )}
+      {!isLoading && url && (
+        <iframe 
+          width="100%" 
+          height="100%" 
+          src={url}
+          title="Preview"
+        />
+      )}
+    </div>
+  );
+}
