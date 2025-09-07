@@ -1,28 +1,26 @@
-import type { Metadata } from "next";
-// import localFont from "next/font/local";
-import { Actor } from "next/font/google";
-import "./globals.css";
+import type React from "react"
+import type { Metadata } from "next"
+import { Orbitron } from "next/font/google"
+import { Geist_Mono } from "next/font/google"
+import { Suspense } from "react"
 import { Providers } from "../providers";
 
-// const geistSans = localFont({
-//   src: "./fonts/GeistVF.woff",
-//   variable: "--font-geist-sans",
-// });
-// const geistMono = localFont({
-//   src: "./fonts/GeistMonoVF.woff",
-//   variable: "--font-geist-mono",
-// });
-
-const actor = Actor({
+const orbitron = Orbitron({
   subsets: ["latin"],
-  weight: "400",
-});
+  variable: "--font-orbitron",
+  weight: ["400", "500", "600", "700", "800", "900"],
+})
+
+const geistMono = Geist_Mono({
+  subsets: ["latin"],
+  variable: "--font-geist-mono",
+})
 
 export const metadata: Metadata = {
-  title: "BoronGPT",
-  description:
-    "A gpt wrapper that lets you build, edit and preview MVPs inside browser",
-};
+  title: "BoronGPT - The Future of AI",
+  description: "Experience the next generation of artificial intelligence with BoronGPT",
+  generator: "v0.app",
+}
 
 export default function RootLayout({
   children,
@@ -30,9 +28,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={actor.className}>
-      <body>
-        <Providers>{children}</Providers>
+    <html lang="en">
+      <body className={`font-sans ${orbitron.variable} ${geistMono.variable}`}>
+        <Suspense fallback={null}>
+          <Providers>
+            {children}
+          </Providers>
+        </Suspense>
       </body>
     </html>
   );

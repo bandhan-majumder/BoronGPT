@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="assets/boron.svg" alt="logo" width="620" style="border: 1px solid #ccc; border-radius: 8px;" />
+<img src="assets/image.png" alt="logo" width="full" style="border: 1px solid #ccc; border-radius: 8px;" />
 
 ### BoronGPT - A GPT wrapper that actually builds your MVP
 
