@@ -1,11 +1,11 @@
-'use client';
+"use client";
 
 import { Button } from "@repo/ui/index";
-import { Eye, Settings, Share2 } from 'lucide-react';
+import { Eye, Settings, Share2 } from "lucide-react";
 
 export default function Header() {
   const handlePreview = () => {
-    window.open('/preview', '_blank');
+    window.open("/preview", "_blank");
   };
 
   return (
@@ -24,13 +24,13 @@ export default function Header() {
           <Share2 className="w-4 h-4" />
           Share
         </Button>
-        
+
         <Button variant="outline" size="sm" className="flex items-center gap-2">
           <Settings className="w-4 h-4" />
           Settings
         </Button>
-        
-        <Button 
+
+        <Button
           onClick={handlePreview}
           className="bg-blue-600 hover:bg-blue-700 text-white flex items-center gap-2 transition-all duration-200"
           size="sm"

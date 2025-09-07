@@ -1,26 +1,29 @@
-'use client';
+"use client";
 
-import React from 'react';
-import { useState, useEffect, useMemo } from 'react';
-import StepList from '../StepList';
-import { CodeEditor } from '../CodeEditor';
+import React from "react";
+import { useState, useEffect, useMemo } from "react";
+import StepList from "../StepList";
+import { CodeEditor } from "../CodeEditor";
 import { FileItem, Step, StepAfterConvert } from "../../types/index";
-import { filterStepsToFiles, modifySteps } from '../../lib/step';
-import { useWebContainer } from '../../hooks/useWebcontainer';
-import { FileExplorer } from '../FileExplorer';
-import { TabView } from '../TabView';
-import { PreviewFrame } from '../PreviewFrame';
+import { filterStepsToFiles, modifySteps } from "../../lib/step";
+import { useWebContainer } from "../../hooks/useWebcontainer";
+import { FileExplorer } from "../FileExplorer";
+import { TabView } from "../TabView";
+import { PreviewFrame } from "../PreviewFrame";
 
-export default function EditorScreen({ initialSteps, prompt }: {
-  initialSteps: StepAfterConvert[]
-  prompt: string
+export default function EditorScreen({
+  initialSteps,
+  prompt,
+}: {
+  initialSteps: StepAfterConvert[];
+  prompt: string;
 }) {
   const [currentStep, setCurrentStep] = useState(1);
   const [steps, setSteps] = useState<Step[]>([]);
   const [files, setFiles] = useState<FileItem[]>([]);
   const webcontainer = useWebContainer();
   const [selectedFile, setSelectedFile] = useState<FileItem | null>(null);
-  const [activeTab, setActiveTab] = useState<'code' | 'preview'>('code');
+  const [activeTab, setActiveTab] = useState<"code" | "preview">("code");
 
   // Initialize files from initialSteps only once when component mounts
   useEffect(() => {
@@ -29,11 +32,11 @@ export default function EditorScreen({ initialSteps, prompt }: {
     const originalFiles = filterStepsToFiles(modifiedSteps);
     if (originalFiles.length > 0) {
       setFiles(originalFiles);
-      setSteps(prevSteps =>
+      setSteps((prevSteps) =>
         prevSteps.map((s: Step) => ({
           ...s,
-          status: "completed"
-        }))
+          status: "completed",
+        })),
       );
     }
   }, [initialSteps]); // Only depend on initialSteps
@@ -46,28 +49,31 @@ export default function EditorScreen({ initialSteps, prompt }: {
       const mountStructure: Record<string, any> = {};
 
       const processFile = (file: FileItem, isRootFolder: boolean) => {
-        if (file.type === 'folder') {
+        if (file.type === "folder") {
           // For folders, create a directory entry
           mountStructure[file.name] = {
-            directory: file.children ?
-              Object.fromEntries(
-                file.children.map(child => [child.name, processFile(child, false)])
-              )
-              : {}
+            directory: file.children
+              ? Object.fromEntries(
+                  file.children.map((child) => [
+                    child.name,
+                    processFile(child, false),
+                  ]),
+                )
+              : {},
           };
-        } else if (file.type === 'file') {
+        } else if (file.type === "file") {
           if (isRootFolder) {
             mountStructure[file.name] = {
               file: {
-                contents: file.content || ''
-              }
+                contents: file.content || "",
+              },
             };
           } else {
             // For files, create a file entry with contents
             return {
               file: {
-                contents: file.content || ''
-              }
+                contents: file.content || "",
+              },
             };
           }
         }
@@ -76,7 +82,7 @@ export default function EditorScreen({ initialSteps, prompt }: {
       };
 
       // Process each top-level file/folder
-      files.forEach(file => processFile(file, true));
+      files.forEach((file) => processFile(file, true));
 
       return mountStructure;
     };
@@ -87,7 +93,9 @@ export default function EditorScreen({ initialSteps, prompt }: {
 
   // Memoize the PreviewFrame to prevent unnecessary re-renders
   const previewFrame = useMemo(() => {
-    return webcontainer ? <PreviewFrame webContainer={webcontainer} files={files} /> : null;
+    return webcontainer ? (
+      <PreviewFrame webContainer={webcontainer} files={files} />
+    ) : null;
   }, [webcontainer, files]);
 
   return (
@@ -109,7 +117,7 @@ export default function EditorScreen({ initialSteps, prompt }: {
                 />
               </div>
               <div>
-                <div className='flex'>
+                <div className="flex">
                   <br />
                   {/* {(loading || !templateSet) && <Loader />}
                   {!(loading || !templateSet) && <div className='flex'>
@@ -146,15 +154,12 @@ export default function EditorScreen({ initialSteps, prompt }: {
             </div>
           </div>
           <div className="col-span-1">
-            <FileExplorer
-              files={files}
-              onFileSelect={setSelectedFile}
-            />
+            <FileExplorer files={files} onFileSelect={setSelectedFile} />
           </div>
           <div className="col-span-2 bg-gray-900 rounded-lg shadow-lg p-4 h-[calc(100vh-8rem)]">
             <TabView activeTab={activeTab} onTabChange={setActiveTab} />
             <div className="h-[calc(100%-4rem)]">
-              {activeTab === 'code' ? (
+              {activeTab === "code" ? (
                 <CodeEditor file={selectedFile} />
               ) : (
                 previewFrame

@@ -1,7 +1,7 @@
 "use client";
 
-import { WebContainer } from '@webcontainer/api';
-import React, { useEffect, useState } from 'react';
+import { WebContainer } from "@webcontainer/api";
+import React, { useEffect, useState } from "react";
 
 interface PreviewFrameProps {
   files: any[];
@@ -15,40 +15,40 @@ export function PreviewFrame({ files, webContainer }: PreviewFrameProps) {
 
   async function installDependencies() {
     try {
-      const installProcess = await webContainer.spawn('npm', ['install']);
+      const installProcess = await webContainer.spawn("npm", ["install"]);
 
       installProcess.output.pipeTo(
         new WritableStream({
           write(data) {
             console.log(data);
-          }
-        })
+          },
+        }),
       );
 
       const exitCode = await installProcess.exit;
-      
+
       if (exitCode !== 0) {
-        throw new Error('Installation failed');
+        throw new Error("Installation failed");
       }
 
       return exitCode;
     } catch (err) {
-      console.error('Install error:', err);
+      console.error("Install error:", err);
       throw err;
     }
   }
 
   async function startDevServer() {
     try {
-      await webContainer.spawn('npm', ['run', 'dev']);
-      
-      webContainer.on('server-ready', (port, url) => {
+      await webContainer.spawn("npm", ["run", "dev"]);
+
+      webContainer.on("server-ready", (port, url) => {
         setUrl(url);
         setIsLoading(false);
       });
     } catch (err) {
-      console.error('Dev server error:', err);
-      setError('Failed to start development server');
+      console.error("Dev server error:", err);
+      setError("Failed to start development server");
       setIsLoading(false);
     }
   }
@@ -59,14 +59,13 @@ export function PreviewFrame({ files, webContainer }: PreviewFrameProps) {
       setError(null);
 
       const exitCode = await installDependencies();
-      
+
       if (exitCode === 0) {
         await startDevServer();
       }
-
     } catch (err) {
-      console.error('Setup error:', err);
-      setError('Failed to setup development environment');
+      console.error("Setup error:", err);
+      setError("Failed to setup development environment");
       setIsLoading(false);
     }
   }
@@ -75,7 +74,7 @@ export function PreviewFrame({ files, webContainer }: PreviewFrameProps) {
     if (webContainer) {
       main();
     }
-  }, [webContainer]); 
+  }, [webContainer]);
 
   if (error) {
     return (
@@ -95,12 +94,7 @@ export function PreviewFrame({ files, webContainer }: PreviewFrameProps) {
         </div>
       )}
       {!isLoading && url && (
-        <iframe 
-          width="100%" 
-          height="100%" 
-          src={url}
-          title="Preview"
-        />
+        <iframe width="100%" height="100%" src={url} title="Preview" />
       )}
     </div>
   );

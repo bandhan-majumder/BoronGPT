@@ -1,16 +1,14 @@
-
 export enum ActionType {
   file = "file",
-  shell = "shell"
+  shell = "shell",
 }
-
 
 export enum StepType {
   CreateFile,
   CreateFolder,
   EditFile,
   DeleteFile,
-  RunScript
+  RunScript,
 }
 
 export interface ResponseAfterConvert {
@@ -31,7 +29,7 @@ export interface Step {
   title: string;
   description: string;
   type: StepType;
-  status: 'pending' | 'in-progress' | 'completed';
+  status: "pending" | "in-progress" | "completed";
   code?: string; // for CreateFile, EditFile types
   script?: string; // for RunScript type
   filePath?: string;
@@ -44,7 +42,7 @@ export interface Project {
 
 export interface FileItem {
   name: string;
-  type: 'file' | 'folder';
+  type: "file" | "folder";
   children?: FileItem[];
   content?: string;
   path: string;

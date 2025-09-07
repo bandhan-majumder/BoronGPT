@@ -1,21 +1,21 @@
 "use client";
 
-import React, { useState, useEffect, Suspense } from 'react'
-import EditorScreen from '../../components/screen/EditorScreen'
-import { usePromptStore } from '../../providers/prompt-store-provider'
-import { useCreateApp } from '../../hooks/query/useCreateApp';
-import { useRouter } from 'next/navigation';
-import Loading from '../loading';
-import { parseBoronActions } from '../../hooks/useConvertSteps';
-import { StepAfterConvert } from '../../types';
+import React, { useState, useEffect, Suspense } from "react";
+import EditorScreen from "../../components/screen/EditorScreen";
+import { usePromptStore } from "../../providers/prompt-store-provider";
+import { useCreateApp } from "../../hooks/query/useCreateApp";
+import { useRouter } from "next/navigation";
+import Loading from "../loading";
+import { parseBoronActions } from "../../hooks/useConvertSteps";
+import { StepAfterConvert } from "../../types";
 
 export default function PlayGround() {
   const router = useRouter();
-  const { prompt } = usePromptStore(
-    (state) => state,
-  )
+  const { prompt } = usePromptStore((state) => state);
 
-  const [initialSteps, setInitialSteps] = useState<StepAfterConvert[] | null>(null);
+  const [initialSteps, setInitialSteps] = useState<StepAfterConvert[] | null>(
+    null,
+  );
   const [processingError, setProcessingError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -25,8 +25,8 @@ export default function PlayGround() {
   }, [prompt, router]);
 
   // Don't call the hook if there's no prompt
-  const { data, error, isLoading } = useCreateApp({ 
-    prompt: prompt || '', 
+  const { data, error, isLoading } = useCreateApp({
+    prompt: prompt || "",
   });
 
   // Process the response when data is available
@@ -37,15 +37,17 @@ export default function PlayGround() {
       try {
         setProcessingError(null); // Clear previous errors
         const processedSteps = parseBoronActions(data);
-        
+
         if (processedSteps?.metadata && processedSteps.steps.length > 0) {
           setInitialSteps(processedSteps.steps);
         } else {
-          setProcessingError('No valid steps found in response');
+          setProcessingError("No valid steps found in response");
         }
       } catch (err) {
-        console.error('Error processing response:', err);
-        setProcessingError(err instanceof Error ? err.message : 'Unknown error');
+        console.error("Error processing response:", err);
+        setProcessingError(
+          err instanceof Error ? err.message : "Unknown error",
+        );
       }
     }
 
@@ -74,8 +76,8 @@ export default function PlayGround() {
         <div className="text-center text-red-400">
           <h2 className="text-xl font-semibold mb-2">Error occurred</h2>
           <p>{error.message}</p>
-          <button 
-            onClick={() => router.push("/")} 
+          <button
+            onClick={() => router.push("/")}
             className="mt-4 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
           >
             Go Back
@@ -91,8 +93,8 @@ export default function PlayGround() {
         <div className="text-center text-red-400">
           <h2 className="text-xl font-semibold mb-2">Processing Error</h2>
           <p>{processingError}</p>
-          <button 
-            onClick={() => router.push("/")} 
+          <button
+            onClick={() => router.push("/")}
             className="mt-4 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
           >
             Try Again
@@ -124,4 +126,4 @@ export default function PlayGround() {
       <EditorScreen initialSteps={initialSteps} prompt={prompt} />
     </Suspense>
   );
-};
+}

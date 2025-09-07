@@ -1,11 +1,11 @@
-import Redis from 'ioredis';
-import { REDIS_URL } from './config';
+import Redis from "ioredis";
+import { REDIS_URL } from "./config";
 
 let redisInstance: Redis | null = null;
 
 export function getRedisInstance(): Redis {
   if (!redisInstance) {
-    redisInstance = new Redis(REDIS_URL || 'redis://localhost:6379', {
+    redisInstance = new Redis(REDIS_URL || "redis://localhost:6379", {
       enableReadyCheck: false,
       maxRetriesPerRequest: null,
       lazyConnect: true,
@@ -15,16 +15,16 @@ export function getRedisInstance(): Redis {
     });
 
     // Handle connection events
-    redisInstance.on('connect', () => {
-      console.log('Redis connected successfully');
+    redisInstance.on("connect", () => {
+      console.log("Redis connected successfully");
     });
 
-    redisInstance.on('error', (error) => {
-      console.error('Redis error:', error);
+    redisInstance.on("error", (error) => {
+      console.error("Redis error:", error);
     });
 
-    redisInstance.on('close', () => {
-      console.log('Redis connection closed');
+    redisInstance.on("close", () => {
+      console.log("Redis connection closed");
     });
   }
 

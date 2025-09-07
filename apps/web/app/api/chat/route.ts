@@ -1,9 +1,9 @@
-import { getAnthropicInstance } from '../../../lib/anthropic';
-import { ANTHROPIC_MODEL_NAME } from '../../../lib/config';
-import { getSystemPrompt } from '../../../prompts';
-import { cacheService } from '../../../lib/cache';
+import { getAnthropicInstance } from "../../../lib/anthropic";
+import { ANTHROPIC_MODEL_NAME } from "../../../lib/config";
+import { getSystemPrompt } from "../../../prompts";
+import { cacheService } from "../../../lib/cache";
 import type { TextBlock } from "@anthropic-ai/sdk/resources";
-import { NextResponse } from 'next/server';
+import { NextResponse } from "next/server";
 
 export async function POST(req: Request) {
   try {
@@ -33,12 +33,12 @@ export async function POST(req: Request) {
 
     // If no cache hit, make API call
     const anthropic = getAnthropicInstance();
-    
+
     const response = await anthropic.messages.create({
       messages: messages,
       model: model,
       max_tokens: maxTokens,
-      system: systemPrompt
+      system: systemPrompt,
     });
 
     const responseText = (response.content[0] as TextBlock)?.text;
@@ -60,11 +60,13 @@ export async function POST(req: Request) {
 
     return NextResponse.json({
       response: responseText,
-      cached: false
+      cached: false,
     });
-    
   } catch (error) {
-    console.error('Chat API error:', error);
-    return NextResponse.json({ message: 'Internal server error' }, { status: 500 });
+    console.error("Chat API error:", error);
+    return NextResponse.json(
+      { message: "Internal server error" },
+      { status: 500 },
+    );
   }
 }

@@ -1,6 +1,6 @@
 /*
-* Create a singleton instance
-*/
+ * Create a singleton instance
+ */
 
 import Anthropic from "@anthropic-ai/sdk";
 import { ANTHROPIC_API_KEY } from "./config";

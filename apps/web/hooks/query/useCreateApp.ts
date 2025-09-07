@@ -11,10 +11,10 @@ interface Message {
 
 export function useCreateApp({ prompt }: { prompt: string }) {
   // First query to get the template
-  const { 
-    data: initialData, 
-    error: initialError, 
-    isLoading: initialIsLoading 
+  const {
+    data: initialData,
+    error: initialError,
+    isLoading: initialIsLoading,
   } = useQuery({
     queryKey: ["createApp", prompt],
     queryFn: async () => {
@@ -46,32 +46,27 @@ export function useCreateApp({ prompt }: { prompt: string }) {
 
     const promptMessages = initialData.prompts.map((promptText: string) => ({
       role: "user" as const,
-      content: promptText
+      content: promptText,
     }));
-    
-    return [
-      ...promptMessages,
-      { role: "user", content: prompt }
-    ];
+
+    return [...promptMessages, { role: "user", content: prompt }];
   }, [initialData?.prompts, prompt]);
 
   // Create a stable query key for the messages
   const messagesQueryKey = useMemo(() => {
     if (messages.length === 0) return ["chat", "empty"];
-    
+
     // Create a stable key based on message contents
-    const messageHash = messages
-      .map(m => `${m.role}:${m.content}`)
-      .join("|");
-    
+    const messageHash = messages.map((m) => `${m.role}:${m.content}`).join("|");
+
     return ["chat", messageHash];
   }, [messages]);
 
   // Second query - only runs when we have initialData and messages
-  const { 
-    data: finalData, 
-    error: finalError, 
-    isLoading: finalIsLoading 
+  const {
+    data: finalData,
+    error: finalError,
+    isLoading: finalIsLoading,
   } = useQuery({
     queryKey: messagesQueryKey,
     queryFn: async () => {
@@ -100,6 +95,6 @@ export function useCreateApp({ prompt }: { prompt: string }) {
       messagesLength: messages.length,
       initialIsLoading,
       finalIsLoading,
-    }
+    },
   };
 }

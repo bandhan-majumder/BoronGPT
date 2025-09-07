@@ -1,5 +1,5 @@
-import crypto from 'crypto';
-import { getRedisInstance } from './redis';
+import crypto from "crypto";
+import { getRedisInstance } from "./redis";
 
 export interface CacheOptions {
   ttl?: number; // Time to live in seconds (default: 1 hour)
@@ -14,25 +14,28 @@ export class CacheService {
    * Generate a consistent cache key for Claude API requests
    */
   private generateCacheKey(
-    messages: any[], 
-    model: string, 
+    messages: any[],
+    model: string,
     systemPrompt: string,
     maxTokens: number,
-    keyPrefix?: string
+    keyPrefix?: string,
   ): string {
-    const normalizedMessages = JSON.stringify(messages, Object.keys(messages).sort());
+    const normalizedMessages = JSON.stringify(
+      messages,
+      Object.keys(messages).sort(),
+    );
     const cacheData = {
       messages: normalizedMessages,
       model,
       system: systemPrompt,
-      maxTokens
+      maxTokens,
     };
-    
+
     const hash = crypto
-      .createHash('sha256')
+      .createHash("sha256")
       .update(JSON.stringify(cacheData, Object.keys(cacheData).sort()))
-      .digest('hex');
-    
+      .digest("hex");
+
     return keyPrefix ? `${keyPrefix}:${hash}` : `claude:${hash}`;
   }
 
@@ -40,32 +43,32 @@ export class CacheService {
    * Get cached response for similar queries
    */
   async getCachedResponse(
-    messages: any[], 
-    model: string, 
+    messages: any[],
+    model: string,
     systemPrompt: string,
     maxTokens: number,
-    options?: CacheOptions
+    options?: CacheOptions,
   ): Promise<string | null> {
     try {
       const cacheKey = this.generateCacheKey(
-        messages, 
-        model, 
-        systemPrompt, 
+        messages,
+        model,
+        systemPrompt,
         maxTokens,
-        options?.keyPrefix
+        options?.keyPrefix,
       );
-      
+
       const cachedResponse = await this.redis.get(cacheKey);
-      
+
       if (cachedResponse) {
         console.log(`Cache hit for key: ${cacheKey}`);
         return cachedResponse;
       }
-      
+
       console.log(`Cache miss for key: ${cacheKey}`);
       return null;
     } catch (error) {
-      console.error('Error getting cached response:', error);
+      console.error("Error getting cached response:", error);
       return null; // Fall back to API call if cache fails
     }
   }
@@ -74,27 +77,27 @@ export class CacheService {
    * Cache the Claude API response
    */
   async setCachedResponse(
-    messages: any[], 
-    model: string, 
+    messages: any[],
+    model: string,
     systemPrompt: string,
     maxTokens: number,
     response: string,
-    options?: CacheOptions
+    options?: CacheOptions,
   ): Promise<void> {
     try {
       const cacheKey = this.generateCacheKey(
-        messages, 
-        model, 
-        systemPrompt, 
+        messages,
+        model,
+        systemPrompt,
         maxTokens,
-        options?.keyPrefix
+        options?.keyPrefix,
       );
-      
+
       const ttl = options?.ttl || this.defaultTTL;
-      
+
       await this.redis.setex(cacheKey, ttl, response);
     } catch (error) {
-      console.error('Error caching response:', error);
+      console.error("Error caching response:", error);
     }
   }
 
@@ -107,21 +110,22 @@ export class CacheService {
     hitRate?: number;
   }> {
     try {
-      const info = await this.redis.info('memory');
+      const info = await this.redis.info("memory");
       const keyCount = await this.redis.dbsize();
-      
+
       const memoryMatch = info.match(/used_memory_human:(.+)/);
-      const memoryUsage = memoryMatch && memoryMatch[1] ? memoryMatch[1].trim() : 'Unknown';
-      
+      const memoryUsage =
+        memoryMatch && memoryMatch[1] ? memoryMatch[1].trim() : "Unknown";
+
       return {
         totalKeys: keyCount,
         memoryUsage,
       };
     } catch (error) {
-      console.error('Error getting cache stats:', error);
+      console.error("Error getting cache stats:", error);
       return {
         totalKeys: 0,
-        memoryUsage: 'Unknown',
+        memoryUsage: "Unknown",
       };
     }
   }
@@ -131,17 +135,17 @@ export class CacheService {
    */
   async clearCache(pattern?: string): Promise<number> {
     try {
-      const keys = pattern 
+      const keys = pattern
         ? await this.redis.keys(pattern)
-        : await this.redis.keys('claude:*');
-      
+        : await this.redis.keys("claude:*");
+
       if (keys.length === 0) return 0;
-      
+
       const result = await this.redis.del(...keys);
       console.log(`Cleared ${result} cache entries`);
       return result;
     } catch (error) {
-      console.error('Error clearing cache:', error);
+      console.error("Error clearing cache:", error);
       return 0;
     }
   }

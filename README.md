@@ -7,32 +7,42 @@
 </div>
 
 ### Dev Setup
+
 ```
 git clone https://github.com/bandhan-majumder/BoronGPT
 cd BoronGPT
 ```
-then, install al the dependencies with 
+
+then, install al the dependencies with
+
 ```
 pnpm install
 ```
+
 add your Claude-API key and preferred model anme to the .env file by copying
+
 ```
 mv apps/web/.env.example .env
 ```
+
 then run the app by
+
 ```
 pnpm dev
 ```
 
 ### Redis setup (Optional)
+
 ```
 docker run -d \
   --name redis-cache \
   -p 6379:6379 \
   redis:7.2-alpine
 ```
+
 based on the url,
 your .env values will be like this;
+
 ```
 REDIS_HOST=localhost
 REDIS_PORT=6379

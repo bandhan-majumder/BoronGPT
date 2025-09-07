@@ -1,25 +1,23 @@
-import { createStore } from 'zustand/vanilla'
+import { createStore } from "zustand/vanilla";
 
 export type PromptState = {
-  prompt: string
-}
+  prompt: string;
+};
 
 export type PromptActions = {
   // getPrompt: () => void
-  setPrompt: ({ prompt }: {
-    prompt: string
-  }) => void
-}
+  setPrompt: ({ prompt }: { prompt: string }) => void;
+};
 
-export type PromptStore = PromptState & PromptActions
+export type PromptStore = PromptState & PromptActions;
 
 export const initPromptStore = (): PromptState => {
-  return { prompt: new Date().getFullYear().toString() }
-}
+  return { prompt: new Date().getFullYear().toString() };
+};
 
 export const defaultInitState: PromptState = {
-  prompt: '',
-}
+  prompt: "",
+};
 
 export const createPromptStore = (
   initState: PromptState = defaultInitState,
@@ -28,5 +26,5 @@ export const createPromptStore = (
     ...initState,
     // getPrompt: () => set((state) => ({ prompt: state.prompt })),
     setPrompt: ({ prompt }) => set({ prompt }),
-  }))
-}
+  }));
+};

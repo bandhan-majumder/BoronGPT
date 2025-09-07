@@ -1,20 +1,18 @@
 "use client";
 
-import { Button, Textarea } from '@repo/ui/index'
-import { ArrowUp, Plus } from 'lucide-react'
-import { useState, useRef, useEffect, Suspense } from 'react'
-import { useRouter } from 'next/navigation';
-import { usePromptStore } from '../providers/prompt-store-provider'
-import Loading from './loading';
+import { Button, Textarea } from "@repo/ui/index";
+import { ArrowUp, Plus } from "lucide-react";
+import { useState, useRef, useEffect, Suspense } from "react";
+import { useRouter } from "next/navigation";
+import { usePromptStore } from "../providers/prompt-store-provider";
+import Loading from "./loading";
 
 export default function Home() {
-  const [message, setMessage] = useState<string>('');
-  const [greeting, setGreeting] = useState<string>('Welcome');
+  const [message, setMessage] = useState<string>("");
+  const [greeting, setGreeting] = useState<string>("Welcome");
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const router = useRouter();
-  const { setPrompt } = usePromptStore(
-    (state) => state,
-  )
+  const { setPrompt } = usePromptStore((state) => state);
 
   // Set greeting based on current time
   useEffect(() => {
@@ -23,13 +21,13 @@ export default function Home() {
       const hour = now.getHours();
 
       if (hour >= 5 && hour < 12) {
-        setGreeting('Good morning');
+        setGreeting("Good morning");
       } else if (hour >= 12 && hour < 17) {
-        setGreeting('Good afternoon');
+        setGreeting("Good afternoon");
       } else if (hour >= 17 && hour < 21) {
-        setGreeting('Good evening');
+        setGreeting("Good evening");
       } else {
-        setGreeting('Good late night');
+        setGreeting("Good late night");
       }
     };
 
@@ -44,20 +42,20 @@ export default function Home() {
     // store the prompt with zustand
     setPrompt({ prompt: message });
     router.push(`/playground`);
-  }
+  };
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter' && !e.shiftKey) {
-      e.preventDefault()
-      handleSend()
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      handleSend();
     }
-  }
+  };
 
   // Auto-resize textarea based on content
   useEffect(() => {
     const textarea = textareaRef.current;
     if (textarea) {
-      textarea.style.height = 'auto';
+      textarea.style.height = "auto";
 
       const newHeight = Math.min(textarea.scrollHeight, 128);
       textarea.style.height = `${newHeight}px`;
@@ -69,7 +67,6 @@ export default function Home() {
       <div className="min-h-screen bg-gray-900 text-white flex flex-col">
         <main className="flex-1 flex flex-col items-center justify-center px-4 pb-32">
           <div className="w-full max-w-2xl space-y-8">
-
             <div className="text-center space-y-2">
               <h1 className="text-4xl font-light text-gray-100">
                 {greeting}, Bandhan
@@ -90,8 +87,8 @@ export default function Home() {
                   <Textarea
                     ref={textareaRef}
                     style={{
-                      overflow: 'auto',
-                      scrollbarWidth: 'none'
+                      overflow: "auto",
+                      scrollbarWidth: "none",
                     }}
                     value={message}
                     onChange={(e) => setMessage(e.target.value)}
@@ -122,5 +119,5 @@ export default function Home() {
         </main>
       </div>
     </Suspense>
-  )
+  );
 }
