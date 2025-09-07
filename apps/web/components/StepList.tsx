@@ -1,8 +1,8 @@
 "use client";
 
 import { Step } from "../types";
-import { CheckCircle, Circle, Clock, File, ChevronRight } from "lucide-react";
-import StepCard from "./StepCard";
+import { CheckCircle, Circle, Clock } from "lucide-react";
+// import StepCard from "./StepCard";
 
 interface StepsListProps {
   steps: Step[];

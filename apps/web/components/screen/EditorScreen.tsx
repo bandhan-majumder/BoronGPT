@@ -94,7 +94,7 @@ export default function EditorScreen({
   // Memoize the PreviewFrame to prevent unnecessary re-renders
   const previewFrame = useMemo(() => {
     return webcontainer ? (
-      <PreviewFrame webContainer={webcontainer} files={files} />
+      <PreviewFrame webContainer={webcontainer} /> //  files={files}
     ) : null;
   }, [webcontainer, files]);
 

@@ -4,11 +4,11 @@ import { WebContainer } from "@webcontainer/api";
 import React, { useEffect, useState } from "react";
 
 interface PreviewFrameProps {
-  files: any[];
+  // files: any[];
   webContainer: WebContainer;
 }
 
-export function PreviewFrame({ files, webContainer }: PreviewFrameProps) {
+export function PreviewFrame({ webContainer }: PreviewFrameProps) {
   const [url, setUrl] = useState("");
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);

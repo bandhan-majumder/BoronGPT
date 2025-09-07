@@ -2,7 +2,7 @@ import { getAnthropicInstance } from "../../../lib/anthropic";
 import { BASE_PROMPT } from "../../../prompts";
 import { basePromptAsJson as nodeBasePrompt } from "../../../prompts/base/node";
 import { basePromptAsJson as reactBasePrompt } from "../../../prompts/base/react";
-import { cacheService } from "../../../lib/cache";
+// import { cacheService } from "../../../lib/cache";
 import type { TextBlock } from "@anthropic-ai/sdk/resources";
 import { NextResponse } from "next/server";
 import { ANTHROPIC_MODEL_NAME } from "../../../lib/config";

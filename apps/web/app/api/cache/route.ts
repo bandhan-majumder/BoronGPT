@@ -11,14 +11,15 @@ export async function GET(req: Request) {
     const action = searchParams.get("action");
 
     switch (action) {
-      case "stats":
+      case "stats": {
         const stats = await cacheService.getCacheStats();
         return NextResponse.json({
           success: true,
           data: stats,
         });
+      }
 
-      default:
+      default: {
         return NextResponse.json(
           {
             success: false,
@@ -26,6 +27,7 @@ export async function GET(req: Request) {
           },
           { status: 400 },
         );
+      }
     }
   } catch (error) {
     console.error("Cache management error:", error);
