@@ -1,8 +1,10 @@
-### BoronGPT - A gpt wrapper that lets you build, edit and preview MVPs inside browser
+<div align="center">
 
-#### Ask it to build apps and it will build it from end to end
+<img src="assets/boron.svg" alt="logo" width="620" style="border: 1px solid #ccc; border-radius: 8px;" />
 
-![logo](/assets/boron.svg)
+### BoronGPT - A GPT wrapper that actually builds your MVP
+
+</div>
 
 ### Dev Setup
 ```
@@ -22,7 +24,7 @@ then run the app by
 pnpm dev
 ```
 
-### Redis setup
+### Redis setup (Optional)
 ```
 docker run -d \
   --name redis-cache \

@@ -9,7 +9,6 @@ interface PreviewFrameProps {
 }
 
 export function PreviewFrame({ files, webContainer }: PreviewFrameProps) {
-  console.log("Inside previewframe");
   const [url, setUrl] = useState("");
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -26,7 +25,6 @@ export function PreviewFrame({ files, webContainer }: PreviewFrameProps) {
         })
       );
 
-      // Wait for install command to exit (this was missing in your code)
       const exitCode = await installProcess.exit;
       
       if (exitCode !== 0) {
@@ -42,14 +40,9 @@ export function PreviewFrame({ files, webContainer }: PreviewFrameProps) {
 
   async function startDevServer() {
     try {
-      // Start the dev server
       await webContainer.spawn('npm', ['run', 'dev']);
-
-      console.log("Server is being ready");
       
-      // Wait for server-ready event
       webContainer.on('server-ready', (port, url) => {
-        console.log("server is ready....", url, port);
         setUrl(url);
         setIsLoading(false);
       });
@@ -65,11 +58,9 @@ export function PreviewFrame({ files, webContainer }: PreviewFrameProps) {
       setIsLoading(true);
       setError(null);
 
-      // Install dependencies and wait for completion
       const exitCode = await installDependencies();
       
       if (exitCode === 0) {
-        // Only start dev server if installation was successful
         await startDevServer();
       }
 
