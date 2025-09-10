@@ -4,6 +4,7 @@ import { Orbitron } from "next/font/google"
 import { Geist_Mono } from "next/font/google"
 import { Suspense } from "react"
 import { Providers } from "../providers";
+import "./globals.css";
 
 const orbitron = Orbitron({
   subsets: ["latin"],
