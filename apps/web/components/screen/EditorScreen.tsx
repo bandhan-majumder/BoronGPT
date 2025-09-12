@@ -99,17 +99,18 @@ export default function EditorScreen({
   }, [webcontainer, files]);
 
   return (
-    <div className="min-h-screen bg-gray-900 flex flex-col">
-      <header className="bg-gray-800 border-b border-gray-700 px-6 py-4">
-        <h1 className="text-xl font-semibold text-gray-100">Website Builder</h1>
-        <p className="text-sm text-gray-400 mt-1">Prompt: {prompt}</p>
+    <div className="min-h-screen bg-black flex flex-col">
+      <header className="bg-black border-b border-gray-700 px-6 py-4">
+        <h1 className="text-xl font-semibold text-yellow-200">BoronGPT - Your AI builder</h1>
+        <p className="text-sm text-gray-200 mt-1">Prompt: {prompt}</p>
       </header>
 
       <div className="flex-1 overflow-hidden">
-        <div className="h-full grid grid-cols-4 gap-6 p-6">
-          <div className="col-span-1 space-y-6 overflow-auto">
+        <div className="h-full grid grid-cols-12 gap-6 p-6">
+          {/* Steps Panel - Increased from col-span-1 to col-span-4 */}
+          <div className="col-span-4 space-y-6 overflow-auto">
             <div>
-              <div className="h-[80vh]">
+              <div className="h-[80vh] w-[30vw]">
                 <StepList
                   steps={steps}
                   currentStep={currentStep}
@@ -153,10 +154,14 @@ export default function EditorScreen({
               </div>
             </div>
           </div>
-          <div className="col-span-1">
+          
+          {/* File Explorer - Reduced from col-span-1 to col-span-2 */}
+          <div className="col-span-2">
             <FileExplorer files={files} onFileSelect={setSelectedFile} />
           </div>
-          <div className="col-span-2 bg-gray-900 rounded-lg shadow-lg p-4 h-[calc(100vh-8rem)]">
+          
+          {/* Code/Preview Area - Reduced from col-span-2 to col-span-6 */}
+          <div className="col-span-6 bg-gray-900 rounded-lg shadow-lg p-4 h-[calc(100vh-8rem)]">
             <TabView activeTab={activeTab} onTabChange={setActiveTab} />
             <div className="h-[calc(100%-4rem)]">
               {activeTab === "code" ? (

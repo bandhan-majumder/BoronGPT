@@ -14,12 +14,14 @@ import React, { useEffect, useRef, useState } from 'react'
 import { groupedModels, models } from '../prompts/helper/models';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
+import { usePromptStore } from '../providers/prompt-store-provider';
 
 function ChatInput() {
     const [message, setMessage] = useState<string>("");
     const { status, data } = useSession();
     const router = useRouter();
 
+    const setPrompt = usePromptStore((state) => state.setPrompt);
     const [selectedModel, setSelectedModel] = useState<string>("claude-3-haiku-20240307"); // default model
     const textareaRef = useRef<HTMLTextAreaElement>(null);
 
@@ -35,7 +37,9 @@ function ChatInput() {
         if (status === "unauthenticated") {
             router.push("/auth");
         } else {
-            localStorage.setItem("userPrompt", message);
+            setPrompt({ prompt: message.trim() });
+
+            setMessage("");
             router.push("/playground");
         }
     };

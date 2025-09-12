@@ -41,7 +41,7 @@ function FileNode({ item, depth, onFileClick }: FileNodeProps) {
           </span>
         )}
         {item.type === "folder" ? (
-          <FolderTree className="w-4 h-4 text-blue-400" />
+          <FolderTree className="w-4 h-4 text-yellow-200" />
         ) : (
           <File className="w-4 h-4 text-gray-400" />
         )}
@@ -66,7 +66,7 @@ function FileNode({ item, depth, onFileClick }: FileNodeProps) {
 export function FileExplorer({ files, onFileSelect }: FileExplorerProps) {
   return (
     <div className="bg-gray-900 rounded-lg shadow-lg p-4 h-full overflow-auto">
-      <h2 className="text-lg font-semibold mb-4 flex items-center gap-2 text-gray-100">
+      <h2 className="text-lg font-semibold mb-4 flex items-center gap-2 text-white">
         <FolderTree className="w-5 h-5" />
         File Explorer
       </h2>
