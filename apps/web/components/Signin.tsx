@@ -18,6 +18,7 @@ const Signin = () => {
             width={60}
             height={60}
             alt="logo"
+            style={{ transform: "rotate(35deg)" }}
             className="rounded-full"
           />
         </Link>

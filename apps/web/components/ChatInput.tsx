@@ -44,6 +44,19 @@ function ChatInput() {
         }
     };
 
+    const onKeyDownHandler = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+        if (e.key === 'Enter') {
+            if (e.shiftKey) {
+                return;
+            } else {
+                e.preventDefault();
+                if (message.trim()) {
+                    onClickHandler();
+                }
+            }
+        }
+    }
+
     const selectedModelData = models.find(model => model.id === selectedModel);
 
     return (
@@ -64,6 +77,7 @@ function ChatInput() {
                             overflow: "auto",
                             scrollbarWidth: "none",
                         }}
+                        onKeyDown={onKeyDownHandler}
                         value={message}
                         onChange={(e) => setMessage(e.target.value)}
                         placeholder="Build me an app..."

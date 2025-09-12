@@ -5,7 +5,7 @@ export default function UserImage({ image }: any) {
     <div>
       <img
         className="w-full h-full rounded-full cursor-pointer"
-        src={image || ""}
+        src={image || "/icon.svg"}
         width={100}
         height={100}
         alt="user_profile_image"

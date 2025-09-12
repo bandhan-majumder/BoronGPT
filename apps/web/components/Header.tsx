@@ -20,6 +20,7 @@ export const Header = () => {
             width={40}
             height={40}
             alt="logo"
+            style={{ transform: "rotate(35deg)" }}
             className="rounded-full"
           />
         </Link>

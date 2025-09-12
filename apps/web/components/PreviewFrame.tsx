@@ -2,6 +2,7 @@
 
 import { WebContainer } from "@webcontainer/api";
 import React, { useEffect, useState } from "react";
+import LoadingBars from "../../../packages/ui/components/ui/BarsLoading";
 
 interface PreviewFrameProps {
   // files: any[];
@@ -90,7 +91,10 @@ export function PreviewFrame({ webContainer }: PreviewFrameProps) {
     <div className="h-full flex items-center justify-center text-gray-400">
       {isLoading && (
         <div className="text-center">
-          <p className="mb-2">Loading development environment...</p>
+          <div className="flex items-center justify-center">
+            <LoadingBars />
+          </div>
+          <p>Loading preview...</p>
         </div>
       )}
       {!isLoading && url && (
