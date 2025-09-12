@@ -10,6 +10,8 @@ import { useWebContainer } from "../../hooks/useWebcontainer";
 import { FileExplorer } from "../FileExplorer";
 import { TabView } from "../TabView";
 import { PreviewFrame } from "../PreviewFrame";
+import Link from "next/link";
+import Image from "next/image";
 
 export default function EditorScreen({
   initialSteps,
@@ -54,11 +56,11 @@ export default function EditorScreen({
           mountStructure[file.name] = {
             directory: file.children
               ? Object.fromEntries(
-                  file.children.map((child) => [
-                    child.name,
-                    processFile(child, false),
-                  ]),
-                )
+                file.children.map((child) => [
+                  child.name,
+                  processFile(child, false),
+                ]),
+              )
               : {},
           };
         } else if (file.type === "file") {
@@ -99,10 +101,21 @@ export default function EditorScreen({
   }, [webcontainer, files]);
 
   return (
-    <div className="min-h-screen bg-black flex flex-col">
-      <header className="bg-black border-b border-gray-700 px-6 py-4">
-        <h1 className="text-xl font-semibold text-yellow-200">BoronGPT - Your AI builder</h1>
-        <p className="text-sm text-gray-200 mt-1">Prompt: {prompt}</p>
+    <div className="min-h-screen bg-[#302F24] flex flex-col">
+      <header className="flex gap-3 border-b border-gray-400 px-6 py-4">
+        <Link href={"/"} className="flex items-center gap-4 cursor-pointer">
+          <Image
+            src={"/icon.svg"}
+            width={40}
+            height={40}
+            alt="logo"
+            className="rounded-full"
+          />
+        </Link>
+        <div>
+          <h1 className="text-xl font-semibold text-yellow-200">BoronGPT - Your AI builder</h1>
+          <p className="text-sm text-gray-200 mt-1">Prompt: {prompt}</p>
+        </div>
       </header>
 
       <div className="flex-1 overflow-hidden">

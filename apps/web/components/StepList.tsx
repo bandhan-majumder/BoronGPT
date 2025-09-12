@@ -2,11 +2,12 @@
 
 import { Step } from "../types";
 import { CheckCircle, Circle, Clock, ChevronRight } from "lucide-react";
-import { Card, CardContent, CardHeader, CardTitle } from "@repo/ui/index";
+import { Card, CardContent, CardHeader, CardTitle, Progress } from "@repo/ui/index";
 import { Button } from "@repo/ui/index";
 import { Badge } from "@repo/ui/index";
 import { ScrollArea } from "@repo/ui/index";
 import { cn } from "@repo/ui/index";
+import { useEffect } from "react";
 
 interface StepsListProps {
   steps: Step[];
@@ -19,6 +20,14 @@ export default function StepsList({
   currentStep,
   onSelectStep,
 }: StepsListProps) {
+  let progress = null;
+  const completedSteps = steps.filter(step => step.status === "completed").length;
+  const totalSteps = steps.length;
+
+  useEffect(() => {
+    progress = (completedSteps / totalSteps) * 100;
+  }, [completedSteps, totalSteps])
+
   const getStatusIcon = (status: string) => {
     switch (status) {
       case "completed":
@@ -41,9 +50,6 @@ export default function StepsList({
     }
   };
 
-  const completedSteps = steps.filter(step => step.status === "completed").length;
-  const totalSteps = steps.length;
-
   return (
     <Card className="h-auto flex flex-col bg-black">
       <CardHeader className="pb-4 border-b border-slate-700/50">
@@ -56,14 +62,11 @@ export default function StepsList({
             {completedSteps}/{totalSteps}
           </Badge>
         </div>
-        <div className="w-full bg-slate-700 rounded-full h-2 mt-2">
-          <div
-            className="bg-green-600 h-2 rounded-full transition-all duration-500 ease-in-out"
-            style={{ width: `${(completedSteps / totalSteps) * 100}%` }}
-          />
+        <div className="w-full bg-white rounded-full h-2 mt-2">
+          <Progress value={progress} />
         </div>
       </CardHeader>
-      
+
       <CardContent className="flex-1 p-0">
         <ScrollArea className="h-full w-auto rounded-md">
           <div className="p-4 space-y-2">
@@ -83,12 +86,12 @@ export default function StepsList({
                 {currentStep === step.id && (
                   <div className="absolute inset-0 bg-gradient-to-r from-transparent via-yellow-500/10 to-transparent animate-shimmer" />
                 )}
-                
+
                 <div className="flex items-center gap-3 w-full relative z-10">
                   <div className="flex-shrink-0">
                     {getStatusIcon(step.status)}
                   </div>
-                  
+
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center justify-between gap-2 mb-1">
                       <h3 className="font-semibold text-sm truncate">
@@ -96,19 +99,19 @@ export default function StepsList({
                       </h3>
                       {getStatusBadge(step.status)}
                     </div>
-                    
+
                     {step.description && (
                       <p className="text-xs text-muted-foreground line-clamp-2">
                         {step.description}
                       </p>
                     )}
                   </div>
-                  
+
                   <div className="flex-shrink-0 opacity-0 group-hover:opacity-100 transition-opacity">
                     <ChevronRight className="w-4 h-4" />
                   </div>
                 </div>
-                
+
                 {/* Step number indicator */}
                 <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-8 bg-gradient-to-b from-amber-500 to-orange-400 rounded-r-full opacity-0 group-hover:opacity-100 transition-opacity shadow-sm shadow-amber-400/50" />
               </Button>
