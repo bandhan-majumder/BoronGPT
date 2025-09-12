@@ -29,6 +29,9 @@ importers:
       '@monaco-editor/react':
         specifier: ^4.7.0
         version: 4.7.0(monaco-editor@0.52.2)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+      '@prisma/nextjs-monorepo-workaround-plugin':
+        specifier: ^6.16.1
+        version: 6.16.1
       '@repo/db':
         specifier: workspace:*
         version: link:../../packages/db
@@ -584,6 +587,9 @@ packages:
 
   '@prisma/get-platform@6.16.1':
     resolution: {integrity: sha512-kUfg4vagBG7dnaGRcGd1c0ytQFcDj2SUABiuveIpL3bthFdTLI6PJeLEia6Q8Dgh+WhPdo0N2q0Fzjk63XTyaA==}
+
+  '@prisma/nextjs-monorepo-workaround-plugin@6.16.1':
+    resolution: {integrity: sha512-jsgqHVJ7p2zs/1n+SdZmbamKjX/TsqlYC11DZyIU0iqyVORV8FJ8ZbNimrrdP4gt11d0Q6njP+8LsG4dPPfu7A==}
 
   '@radix-ui/number@1.1.1':
     resolution: {integrity: sha512-MkKCwxlXTgz6CFoJx3pCwn07GKp36+aZyu/u2Ln2VrA5DcdyCZkASEDBTd8x5whTQQL5CiYf4prXKLcgQdv29g==}
@@ -2880,6 +2886,8 @@ snapshots:
   '@prisma/get-platform@6.16.1':
     dependencies:
       '@prisma/debug': 6.16.1
+
+  '@prisma/nextjs-monorepo-workaround-plugin@6.16.1': {}
 
   '@radix-ui/number@1.1.1': {}
 
