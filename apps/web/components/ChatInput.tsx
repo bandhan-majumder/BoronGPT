@@ -12,9 +12,14 @@ import {
 import { ArrowUp, Brain, Plus, ChevronDown } from 'lucide-react';
 import React, { useEffect, useRef, useState } from 'react'
 import { groupedModels, models } from '../prompts/helper/models';
+import { useSession } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
 
 function ChatInput() {
     const [message, setMessage] = useState<string>("");
+    const { status, data } = useSession();
+    const router = useRouter();
+
     const [selectedModel, setSelectedModel] = useState<string>("claude-3-haiku-20240307"); // default model
     const textareaRef = useRef<HTMLTextAreaElement>(null);
 
@@ -25,9 +30,14 @@ function ChatInput() {
         }
     }, []);
 
+    // route to playground if the user is authenticated.
     const onClickHandler = () => {
-        // do things with the message set
-        localStorage.setItem("userPrompt", message);
+        if (status === "unauthenticated") {
+            router.push("/auth");
+        } else {
+            localStorage.setItem("userPrompt", message);
+            router.push("/playground");
+        }
     };
 
     const selectedModelData = models.find(model => model.id === selectedModel);
