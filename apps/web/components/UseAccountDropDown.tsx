@@ -32,7 +32,7 @@ export default function UserAccountDropDown() {
         <div className="flex items-center gap-2 rounded-xl px-3 py-2 shadow-sm transition-all duration-200 hover:shadow-md">
           <div className="border-primary/20 h-8 w-8 overflow-hidden rounded-full border-2">
             {user.image ? (
-              <UserImage image={user.image} />
+              <UserImage image={user.image as string} />
             ) : (
               <div className="from-primary-400 to-primary-600 flex h-full w-full items-center justify-center bg-gradient-to-br text-white">
                 <UserRound size={16} />

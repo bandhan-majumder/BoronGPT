@@ -80,7 +80,7 @@ function ChatInput() {
                         onKeyDown={onKeyDownHandler}
                         value={message}
                         onChange={(e) => setMessage(e.target.value)}
-                        placeholder="Build me an app..."
+                        placeholder="Build an app..."
                         className="flex-1 bg-transparent border-none focus:ring-0 text-white placeholder-gray-400 text-lg p-0 outline-none resize-none min-h-[24px] max-h-32 overflow-y-auto leading-6"
                         rows={1}
                     />

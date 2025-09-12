@@ -8,8 +8,10 @@ import { useRouter } from "next/navigation";
 import Loading from "../loading";
 import { parseBoronActions } from "../../hooks/useConvertSteps";
 import { StepAfterConvert } from "../../types";
+import { useSession } from "next-auth/react";
 
 export default function PlayGround() {
+  const { data: sessionData, status } = useSession();
   const router = useRouter();
   const { prompt } = usePromptStore((state) => state);
 
@@ -17,6 +19,10 @@ export default function PlayGround() {
     null,
   );
   const [processingError, setProcessingError] = useState<string | null>(null);
+
+  if (status === "unauthenticated" || !sessionData){
+    router.push("/auth")
+  }
 
   useEffect(() => {
     if (!prompt) {

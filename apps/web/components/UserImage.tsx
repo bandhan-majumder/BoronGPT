@@ -1,11 +1,14 @@
 import React from "react";
+import Image from "next/image";
 
-export default function UserImage({ image }: any) {
+export default function UserImage({ image } : {
+  image: string
+}) {
   return (
     <div>
-      <img
+      <Image
         className="w-full h-full rounded-full cursor-pointer"
-        src={image || "/icon.svg"}
+        src={image}
         width={100}
         height={100}
         alt="user_profile_image"
