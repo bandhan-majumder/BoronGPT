@@ -54,22 +54,25 @@ export const allowedHTMLElements = [
 ];
 
 export const testimonials = [
-        {
-            name: "Sarah Chen",
-            role: "AI Researcher at TechCorp",
-            content: "BoronGPT has revolutionized our building system. The speed and accuracy are unmatched.",
-            rating: 5,
-        },
-        {
-            name: "Marcus Rodriguez",
-            role: "Startup Founder",
-            content: "This AI platform helped us build our MVP in record time. Absolutely game-changing technology.",
-            rating: 5,
-        },
-        {
-            name: "Dr. Emily Watson",
-            role: "Data Scientist",
-            content: "The most intuitive AI interface I've ever used. BoronGPT understands context like no other.",
-            rating: 5,
-        },
-    ]
+  {
+    name: "Sarah Chen",
+    role: "AI Researcher at TechCorp",
+    content:
+      "BoronGPT has revolutionized our building system. The speed and accuracy are unmatched.",
+    rating: 5,
+  },
+  {
+    name: "Marcus Rodriguez",
+    role: "Startup Founder",
+    content:
+      "This AI platform helped us build our MVP in record time. Absolutely game-changing technology.",
+    rating: 5,
+  },
+  {
+    name: "Dr. Emily Watson",
+    role: "Data Scientist",
+    content:
+      "The most intuitive AI interface I've ever used. BoronGPT understands context like no other.",
+    rating: 5,
+  },
+];

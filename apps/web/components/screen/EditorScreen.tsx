@@ -56,11 +56,11 @@ export default function EditorScreen({
           mountStructure[file.name] = {
             directory: file.children
               ? Object.fromEntries(
-                file.children.map((child) => [
-                  child.name,
-                  processFile(child, false),
-                ]),
-              )
+                  file.children.map((child) => [
+                    child.name,
+                    processFile(child, false),
+                  ]),
+                )
               : {},
           };
         } else if (file.type === "file") {
@@ -113,7 +113,9 @@ export default function EditorScreen({
           />
         </Link>
         <div>
-          <h1 className="text-xl font-semibold text-yellow-200">BoronGPT - Your AI builder</h1>
+          <h1 className="text-xl font-semibold text-yellow-200">
+            BoronGPT - Your AI builder
+          </h1>
           <p className="text-sm text-gray-200 mt-1">Prompt: {prompt}</p>
         </div>
       </header>
@@ -167,12 +169,12 @@ export default function EditorScreen({
               </div>
             </div>
           </div>
-          
+
           {/* File Explorer - Reduced from col-span-1 to col-span-2 */}
           <div className="col-span-2">
             <FileExplorer files={files} onFileSelect={setSelectedFile} />
           </div>
-          
+
           {/* Code/Preview Area - Reduced from col-span-2 to col-span-6 */}
           <div className="col-span-6 bg-gray-900 rounded-lg shadow-lg p-4 h-[calc(100vh-8rem)]">
             <TabView activeTab={activeTab} onTabChange={setActiveTab} />

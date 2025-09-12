@@ -1,7 +1,13 @@
 "use client";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@repo/ui/index";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@repo/ui/index";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -12,16 +18,19 @@ const Signin = () => {
     <div className="min-h-screen w-full bg-black flex items-center justify-center p-4">
       <Card className="w-full max-w-md bg-gray-900 border-gray-800">
         <CardHeader className="text-center space-y-4">
-         <Link href={"/"} className="flex items-center justify-center text-center">
-          <Image
-            src={"/icon.svg"}
-            width={60}
-            height={60}
-            alt="logo"
-            style={{ transform: "rotate(35deg)" }}
-            className="rounded-full"
-          />
-        </Link>
+          <Link
+            href={"/"}
+            className="flex items-center justify-center text-center"
+          >
+            <Image
+              src={"/icon.svg"}
+              width={60}
+              height={60}
+              alt="logo"
+              style={{ transform: "rotate(35deg)" }}
+              className="rounded-full"
+            />
+          </Link>
 
           <div className="space-y-2">
             <CardTitle className="text-2xl text-gray-200">Welcome to</CardTitle>

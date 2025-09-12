@@ -20,8 +20,8 @@ export default function PlayGround() {
   );
   const [processingError, setProcessingError] = useState<string | null>(null);
 
-  if (status === "unauthenticated" || !sessionData){
-    router.push("/auth")
+  if (status === "unauthenticated" || !sessionData) {
+    router.push("/auth");
   }
 
   useEffect(() => {

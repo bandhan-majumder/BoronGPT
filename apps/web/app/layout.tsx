@@ -1,8 +1,8 @@
-import type React from "react"
-import type { Metadata } from "next"
-import { Orbitron } from "next/font/google"
-import { Geist_Mono } from "next/font/google"
-import { Suspense } from "react"
+import type React from "react";
+import type { Metadata } from "next";
+import { Orbitron } from "next/font/google";
+import { Geist_Mono } from "next/font/google";
+import { Suspense } from "react";
 import { Providers } from "../providers";
 import "./globals.css";
 
@@ -10,18 +10,19 @@ const orbitron = Orbitron({
   subsets: ["latin"],
   variable: "--font-orbitron",
   weight: ["400", "500", "600", "700", "800", "900"],
-})
+});
 
 const geistMono = Geist_Mono({
   subsets: ["latin"],
   variable: "--font-geist-mono",
-})
+});
 
 export const metadata: Metadata = {
   title: "BoronGPT - The Future of AI",
-  description: "Experience the next generation of artificial intelligence with BoronGPT",
+  description:
+    "Experience the next generation of artificial intelligence with BoronGPT",
   generator: "v0.app",
-}
+};
 
 export default function RootLayout({
   children,
@@ -32,9 +33,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={`font-sans ${orbitron.variable} ${geistMono.variable}`}>
         <Suspense fallback={null}>
-          <Providers>
-            {children}
-          </Providers>
+          <Providers>{children}</Providers>
         </Suspense>
       </body>
     </html>

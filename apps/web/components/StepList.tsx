@@ -2,7 +2,13 @@
 
 import { Step } from "../types";
 import { CheckCircle, Circle, Clock, ChevronRight } from "lucide-react";
-import { Card, CardContent, CardHeader, CardTitle, Progress } from "@repo/ui/index";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  Progress,
+} from "@repo/ui/index";
 import { Button } from "@repo/ui/index";
 import { Badge } from "@repo/ui/index";
 import { ScrollArea } from "@repo/ui/index";
@@ -21,12 +27,14 @@ export default function StepsList({
   onSelectStep,
 }: StepsListProps) {
   let progress = null;
-  const completedSteps = steps.filter(step => step.status === "completed").length;
+  const completedSteps = steps.filter(
+    (step) => step.status === "completed",
+  ).length;
   const totalSteps = steps.length;
 
   useEffect(() => {
     progress = (completedSteps / totalSteps) * 100;
-  }, [completedSteps, totalSteps])
+  }, [completedSteps, totalSteps]);
 
   const getStatusIcon = (status: string) => {
     switch (status) {
@@ -42,11 +50,29 @@ export default function StepsList({
   const getStatusBadge = (status: string) => {
     switch (status) {
       case "completed":
-        return <Badge variant="secondary" className="bg-emerald-500/10 text-emerald-500 border-emerald-500/20">Completed</Badge>;
+        return (
+          <Badge
+            variant="secondary"
+            className="bg-emerald-500/10 text-emerald-500 border-emerald-500/20"
+          >
+            Completed
+          </Badge>
+        );
       case "in-progress":
-        return <Badge variant="secondary" className="bg-yellow-500/10 text-yellow-500 border-yellow-500/20">In Progress</Badge>;
+        return (
+          <Badge
+            variant="secondary"
+            className="bg-yellow-500/10 text-yellow-500 border-yellow-500/20"
+          >
+            In Progress
+          </Badge>
+        );
       default:
-        return <Badge variant="outline" className="text-muted-foreground">Pending</Badge>;
+        return (
+          <Badge variant="outline" className="text-muted-foreground">
+            Pending
+          </Badge>
+        );
     }
   };
 
@@ -78,7 +104,7 @@ export default function StepsList({
                   "w-full justify-start p-4 h-auto text-left transition-all duration-200 group relative overflow-hidden",
                   currentStep === step.id
                     ? "shadow-lg shadow-yellow-500/10 text-white"
-                    : "hover:bg-slate-800/50 text-slate-300 hover:text-white border border-transparent"
+                    : "hover:bg-slate-800/50 text-slate-300 hover:text-white border border-transparent",
                 )}
                 onClick={() => onSelectStep(step.id)}
               >
