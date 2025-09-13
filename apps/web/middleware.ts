@@ -25,10 +25,7 @@ export default withAuth(
         }
 
         // Public routes
-        if (
-          pathname === "/" ||
-          pathname.startsWith("/demo")
-        ) {
+        if (pathname === "/" || pathname.startsWith("/demo")) {
           return true;
         }
 
@@ -41,7 +38,7 @@ export default withAuth(
         return !!token;
       },
     },
-  }
+  },
 );
 
 export const config = {
