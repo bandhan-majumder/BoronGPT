@@ -8,8 +8,8 @@ import { testimonials } from "../../prompts/helper/constants";
 
 export default function BoronGPTLanding() {
   return (
-    <div>
-      <div className="h-screen bg-gradient-to-t from-yellow-100 via-black via-85%  to-black focus:to-yellow-500">
+    <div className="min-h-screen w-screen bg-[1C1C1C] focus:to-yellow-50">
+      <div>
         <Header />
         <Hero />
       </div>
@@ -98,7 +98,9 @@ export default function BoronGPTLanding() {
         </div>
       </section>
 
-      <Footer />
+     <div className="mb-10 flex justify-center">
+       <Footer />
+     </div>
     </div>
   );
 }

@@ -31,7 +31,7 @@ export const Header = () => {
             <Button
               size="lg"
               variant={"default"}
-              className="p-2 bg-yellow-700 text-white rounded-xl cursor-pointer text-md"
+              className="p-2 bg-[#FEFCE8] border text-black rounded-xl cursor-pointer text-md"
               onClick={async () => {
                 await signIn();
                 router.push("/");

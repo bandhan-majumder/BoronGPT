@@ -18,10 +18,9 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "BoronGPT - The Future of AI",
+  title: "Boron - Build in seconds",
   description:
-    "Experience the next generation of artificial intelligence with BoronGPT",
-  generator: "v0.app",
+    "Experience the next generation of building experience with BoronGPT",
 };
 
 export default function RootLayout({

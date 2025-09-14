@@ -101,23 +101,22 @@ export default function EditorScreen({
   }, [webcontainer, files]);
 
   return (
-    <div className="min-h-screen bg-[#302F24] flex flex-col">
-      <header className="flex gap-3 border-b border-gray-400 px-6 py-4">
+    <div className="min-h-screen bg-[#1C1C1C] flex flex-col">
+      <header className="flex gap-3 px-6 py-2">
         <Link href={"/"} className="flex items-center gap-4 cursor-pointer">
           <Image
             crossOrigin="anonymous"
             src={"/icon.svg"}
-            width={40}
-            height={40}
+            width={30}
+            height={30}
             alt="logo"
             className="rounded-full"
           />
         </Link>
-        <div>
-          <h1 className="text-xl font-semibold text-yellow-200">
-            BoronGPT - Your AI builder
-          </h1>
-          <p className="text-sm text-gray-200 mt-1">Prompt: {prompt}</p>
+        <div className="flex justify-center items-center flex-col">
+          <p className="text-sm font-semibold text-white">
+            building-your-app
+          </p>
         </div>
       </header>
 
@@ -126,7 +125,7 @@ export default function EditorScreen({
           {/* Steps Panel - Increased from col-span-1 to col-span-4 */}
           <div className="col-span-4 space-y-6 overflow-auto">
             <div>
-              <div className="h-[80vh] w-[30vw]">
+              <div className="h-[80vh] w-[30vw] border-none">
                 <StepList
                   steps={steps}
                   currentStep={currentStep}

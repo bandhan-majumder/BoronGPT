@@ -6,7 +6,7 @@ import Loading from "./loading";
 export default function LandingPage() {
   return (
     <Suspense fallback={<Loading />}>
-      <div className="min-h-screen bg-[#181819] text-white relative overflow-hidden">
+      <div className="min-h-screen bg-[#191A1A] text-white relative overflow-hidden">
         <BoronGPTLanding />
       </div>
     </Suspense>

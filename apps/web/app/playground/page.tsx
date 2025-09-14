@@ -9,6 +9,7 @@ import Loading from "../loading";
 import { parseBoronActions } from "../../hooks/useConvertSteps";
 import { StepAfterConvert } from "../../types";
 import { useSession } from "next-auth/react";
+import EditorScreenSkeleton from "../../components/skeletons/EditorScreenSkeleton";
 
 export default function PlayGround() {
   const { data: sessionData, status } = useSession();
@@ -30,18 +31,16 @@ export default function PlayGround() {
     }
   }, [prompt, router]);
 
-  // Don't call the hook if there's no prompt
   const { data, error, isLoading } = useCreateApp({
     prompt: prompt || "",
   });
 
-  // Process the response when data is available
   useEffect(() => {
     if (!data) return;
 
     async function processData() {
       try {
-        setProcessingError(null); // Clear previous errors
+        setProcessingError(null);
         const processedSteps = parseBoronActions(data);
 
         if (processedSteps?.metadata && processedSteps.steps.length > 0) {
@@ -60,18 +59,14 @@ export default function PlayGround() {
     processData();
   }, [data]);
 
-  // Handle different loading states
   if (!prompt) {
     return <Loading />;
   }
 
-  if (isLoading) {
+  if ((isLoading || !initialSteps) && !error) {
     return (
-      <div className="min-h-screen bg-gray-900 flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto mb-4"></div>
-          <p className="text-gray-300">Generating your application...</p>
-        </div>
+      <div className="h-screen bg-[#1C1C1C]">
+        <EditorScreenSkeleton />
       </div>
     );
   }
@@ -110,7 +105,6 @@ export default function PlayGround() {
     );
   }
 
-  // Show loading while processing data
   if (data && !initialSteps && !processingError) {
     return (
       <div className="min-h-screen bg-gray-900 flex items-center justify-center">
@@ -122,14 +116,9 @@ export default function PlayGround() {
     );
   }
 
-  // Only render EditorScreen when we have initialSteps
-  if (!initialSteps) {
-    return <Loading />;
-  }
-
   return (
     <Suspense fallback={<Loading />}>
-      <EditorScreen initialSteps={initialSteps} prompt={prompt} />
+      {initialSteps && <EditorScreen initialSteps={initialSteps} prompt={prompt} />}
     </Suspense>
   );
 }

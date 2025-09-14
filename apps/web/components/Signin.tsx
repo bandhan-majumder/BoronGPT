@@ -1,5 +1,5 @@
 "use client";
-import { signIn } from "next-auth/react";
+import { signIn, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import {
   Card,
@@ -13,6 +13,11 @@ import Link from "next/link";
 
 const Signin = () => {
   const router = useRouter();
+  const { status } = useSession();
+
+  if (status === "authenticated") {
+    router.push("/");
+  }
 
   return (
     <div className="min-h-screen w-full bg-black flex items-center justify-center p-4">

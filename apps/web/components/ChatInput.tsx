@@ -15,6 +15,7 @@ import { groupedModels, models } from "../prompts/helper/models";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { usePromptStore } from "../providers/prompt-store-provider";
+import toast from 'react-hot-toast';
 
 function ChatInput() {
   const [message, setMessage] = useState<string>("");
@@ -22,10 +23,9 @@ function ChatInput() {
   const router = useRouter();
 
   const setPrompt = usePromptStore((state) => state.setPrompt);
-  const [selectedModel, setSelectedModel] = useState<string>(
-    "claude-3-haiku-20240307",
-  ); // default model
+  const [selectedModel, setSelectedModel] = useState<string>("");
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const selectedModelData = models.find((model) => model.id === selectedModel);
 
   useEffect(() => {
     const savedModel = localStorage.getItem("model");
@@ -38,12 +38,23 @@ function ChatInput() {
   const onClickHandler = () => {
     if (status === "unauthenticated") {
       router.push("/auth");
-    } else {
-      setPrompt({ prompt: message.trim() });
-
-      setMessage("");
-      router.push("/playground");
+      return;
     }
+    if (!selectedModelData) {
+      toast('😕 Please select a model first!', {
+        style: {
+          backgroundColor: "#FEFCE8",
+          color: "black",
+          border: '1px solid black',
+        },
+      })
+      return;
+    }
+
+    setPrompt({ prompt: message.trim() });
+
+    setMessage("");
+    router.push("/playground");
   };
 
   const onKeyDownHandler = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
@@ -58,8 +69,6 @@ function ChatInput() {
       }
     }
   };
-
-  const selectedModelData = models.find((model) => model.id === selectedModel);
 
   return (
     <div className="relative">
@@ -96,7 +105,7 @@ function ChatInput() {
                   <button className="flex items-center gap-2 hover:text-gray-300 transition-colors focus:outline-none">
                     {selectedModelData?.icon || <Brain className="h-5 w-5" />}
                     <span>
-                      {selectedModelData?.name || "Claude Sonnet 4.0"}
+                      {selectedModelData?.name || "choose a model"}
                     </span>
                     {selectedModelData?.badge && (
                       <span
@@ -132,11 +141,10 @@ function ChatInput() {
                               setSelectedModel(model.id);
                               localStorage.setItem("model", model.id);
                             }}
-                            className={`flex items-center gap-3 cursor-pointer text-gray-300 hover:text-white hover:bg-gray-700/50 focus:bg-gray-700/50 px-3 py-2 ${
-                              selectedModel === model.id
-                                ? "bg-yellow-400/20 text-yellow-400"
-                                : ""
-                            }`}
+                            className={`flex items-center gap-3 cursor-pointer text-gray-300 hover:text-white hover:bg-gray-700/50 focus:bg-gray-700/50 px-3 py-2 ${selectedModel === model.id
+                              ? "bg-yellow-400/20 text-yellow-400"
+                              : ""
+                              }`}
                           >
                             {model.icon}
                             <span className="flex-1">{model.name}</span>

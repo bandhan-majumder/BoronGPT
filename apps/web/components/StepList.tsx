@@ -77,8 +77,8 @@ export default function StepsList({
   };
 
   return (
-    <Card className="h-auto flex flex-col bg-black">
-      <CardHeader className="pb-4 border-b border-slate-700/50">
+    <Card className="h-auto flex flex-col bg-[#1C1C1C] border-gray-700 shadow-2xl border">
+      <CardHeader className="pb-4">
         <div className="flex items-center justify-between">
           <CardTitle className="text-xl font-bold text-white flex items-center gap-2">
             Build Steps
@@ -103,14 +103,14 @@ export default function StepsList({
                 className={cn(
                   "w-full justify-start p-4 h-auto text-left transition-all duration-200 group relative overflow-hidden",
                   currentStep === step.id
-                    ? "shadow-lg shadow-yellow-500/10 text-white"
-                    : "hover:bg-slate-800/50 text-slate-300 hover:text-white border border-transparent",
+                    ? "shadow-lg text-white"
+                    : "hover:bg-slate-800/50 text-slate-300 hover:text-white",
                 )}
                 onClick={() => onSelectStep(step.id)}
               >
                 {/* Background shimmer effect for current step */}
                 {currentStep === step.id && (
-                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-yellow-500/10 to-transparent animate-shimmer" />
+                  <div className="absolute inset-0" />
                 )}
 
                 <div className="flex items-center gap-3 w-full relative z-10">
@@ -139,7 +139,7 @@ export default function StepsList({
                 </div>
 
                 {/* Step number indicator */}
-                <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-8 bg-gradient-to-b from-amber-500 to-orange-400 rounded-r-full opacity-0 group-hover:opacity-100 transition-opacity shadow-sm shadow-amber-400/50" />
+                <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-8 rounded-r-full opacity-0 group-hover:opacity-100 transition-opacity shadow-sm shadow-amber-400/50" />
               </Button>
             ))}
           </div>

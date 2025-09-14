@@ -6,7 +6,7 @@ import { handleCopyEmail } from "../lib/copyClipBoard";
 
 const Footer = () => {
   return (
-    <footer className="py-8 sm:py-12 px-4 text-white">
+    <footer className="py-8 sm:py-12 px-4 text-white bg-[#272725] max-w-[70vw] rounded-2xl min-w-[65vw]">
       <div className="container mx-auto max-w-6xl">
         <div className="text-xl mb-4 font-semibold">BoronGPT</div>
 
@@ -70,7 +70,7 @@ const Footer = () => {
           </div>
         </div>
       </div>
-      <div className="w-full h-auto flex items-center justify-center overflow-hidden">
+      {/* <div className="w-full h-auto flex items-center justify-center overflow-hidden">
         <div className="w-full h-auto flex items-center justify-center overflow-hidden px-2">
           <div className="text-center my-5 w-full">
             <h1
@@ -100,7 +100,7 @@ const Footer = () => {
             </h1>
           </div>
         </div>
-      </div>
+      </div> */}
     </footer>
   );
 };

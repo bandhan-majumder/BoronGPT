@@ -9,3 +9,4 @@ export * from "../components/ui/dropdown-menu";
 export * from "../components/ui/scroll-area";
 export * from "../components/ui/progress";
 export * from "../components/ui/BarsLoading";
+export * from "../components/ui/sidebar";
