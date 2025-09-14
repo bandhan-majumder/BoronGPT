@@ -5,6 +5,7 @@ export default function UserImage({ image }: { image: string }) {
   return (
     <div>
       <Image
+        crossOrigin="anonymous"
         className="w-full h-full rounded-full cursor-pointer"
         src={image}
         width={100}

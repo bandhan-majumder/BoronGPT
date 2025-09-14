@@ -15,9 +15,6 @@ export default withAuth(
           return true;
         }
 
-        // Allow images/logos
-        if (pathname === "/icon.svg") return true;
-
         // Allow auth-related routes
         if (
           pathname.startsWith("/api/auth") ||

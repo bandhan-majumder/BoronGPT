@@ -16,6 +16,7 @@ export const Header = () => {
       <div className="flex w-[90vw] justify-between mx-auto shadow-lg shadow-neutral-600/5 backdrop-blur-lg border border-gray-600 p-3 rounded-2xl md:w-[50vw]">
         <Link href={"/"} className="flex items-center gap-4 cursor-pointer">
           <Image
+            crossOrigin="anonymous"
             src={"/icon.svg"}
             width={40}
             height={40}

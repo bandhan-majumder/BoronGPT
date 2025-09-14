@@ -56,11 +56,11 @@ export default function EditorScreen({
           mountStructure[file.name] = {
             directory: file.children
               ? Object.fromEntries(
-                  file.children.map((child) => [
-                    child.name,
-                    processFile(child, false),
-                  ]),
-                )
+                file.children.map((child) => [
+                  child.name,
+                  processFile(child, false),
+                ]),
+              )
               : {},
           };
         } else if (file.type === "file") {
@@ -105,6 +105,7 @@ export default function EditorScreen({
       <header className="flex gap-3 border-b border-gray-400 px-6 py-4">
         <Link href={"/"} className="flex items-center gap-4 cursor-pointer">
           <Image
+            crossOrigin="anonymous"
             src={"/icon.svg"}
             width={40}
             height={40}

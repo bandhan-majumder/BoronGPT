@@ -11,6 +11,7 @@ function Hero() {
             <h2 className="text-3xl md:text-5xl font-bold text-yellow-50 flex items-center justify-center gap-3">
               Build apps
               <Image
+                crossOrigin="anonymous"
                 src={"/icon.svg"}
                 width={40}
                 height={40}

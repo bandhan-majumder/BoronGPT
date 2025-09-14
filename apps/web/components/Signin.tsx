@@ -23,6 +23,7 @@ const Signin = () => {
             className="flex items-center justify-center text-center"
           >
             <Image
+              crossOrigin="anonymous"
               src={"/icon.svg"}
               width={60}
               height={60}
