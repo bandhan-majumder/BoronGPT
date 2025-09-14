@@ -6,9 +6,20 @@ import { basePromptAsJson as reactBasePrompt } from "../../../prompts/base/react
 import type { TextBlock } from "@anthropic-ai/sdk/resources";
 import { NextResponse } from "next/server";
 import { ANTHROPIC_MODEL_NAME } from "../../../lib/config";
+import { getServerSession } from "next-auth";
+import { authOptions } from "../../../lib/auth";
 
 export async function POST(req: Request) {
   try {
+    const { session } = await getServerSession(authOptions);
+
+    if (!session) {
+      return NextResponse.json(
+        { message: "You must be logged in to access this endpoint" },
+        { status: 401 },
+      );
+    };
+
     const { prompt } = await req.json();
     const model = ANTHROPIC_MODEL_NAME || "claude-3-5-haiku-latest";
     const maxTokens = 50;

@@ -1,4 +1,6 @@
+import { getServerSession } from "next-auth";
 import { getAnthropicInstance } from "../../../lib/anthropic";
+import { authOptions } from "../../../lib/auth";
 // import { ANTHROPIC_MODEL_NAME } from "../../../lib/config";
 import { getSystemPrompt } from "../../../prompts";
 // import { cacheService } from "../../../lib/cache";
@@ -7,6 +9,15 @@ import { NextResponse } from "next/server";
 
 export async function POST(req: Request) {
   try {
+    const { session } = await getServerSession(authOptions);
+
+    if (!session) {
+      return NextResponse.json(
+        { message: "You must be logged in to access this endpoint" },
+        { status: 401 },
+      );
+    };
+    
     const { messages } = await req.json();
     const model = "claude-3-5-sonnet-20241022"; // ANTHROPIC_MODEL_NAME;
     const maxTokens = 8000;

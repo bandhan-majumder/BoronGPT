@@ -3,17 +3,18 @@ import { PrismaAdapter } from "@auth/prisma-adapter";
 import db from "@repo/db/client";
 import type { Adapter } from "next-auth/adapters";
 import { SessionStrategy } from "next-auth";
+import { GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, NEXTAUTH_SECRET } from "./config";
 
 export const authOptions = {
   adapter: PrismaAdapter(db) as Adapter,
   providers: [
     GoogleProvider({
-      clientId: process.env.GOOGLE_CLIENT_ID || "",
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET || "",
+      clientId: GOOGLE_CLIENT_ID,
+      clientSecret: GOOGLE_CLIENT_SECRET,
       allowDangerousEmailAccountLinking: true,
     }),
   ],
-  secret: process.env.NEXTAUTH_SECRET || "mAchIne",
+  secret: NEXTAUTH_SECRET,
   pages: {
     signIn: "/auth",
   },

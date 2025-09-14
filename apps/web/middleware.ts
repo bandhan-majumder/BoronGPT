@@ -15,11 +15,13 @@ export default withAuth(
           return true;
         }
 
+        // Allow images/logos
+        if (pathname === "/icon.svg") return true;
+
         // Allow auth-related routes
         if (
           pathname.startsWith("/api/auth") ||
-          pathname === "/login" ||
-          pathname === "/signin"
+          pathname.startsWith("/auth")
         ) {
           return true;
         }
@@ -50,6 +52,6 @@ export const config = {
      * - favicon.ico (favicon file)
      * - public folder
      */
-    "/((?!_next/static|_next/image|favicon.ico|public/).*)",
+    "/((?!_next/static|_next/image|favicon.ico|public/|api/auth|auth).*)",
   ],
 };
