@@ -1,6 +1,5 @@
 "use client";
-import { signIn, useSession } from "next-auth/react";
-import { useRouter } from "next/navigation";
+
 import {
   Card,
   CardContent,
@@ -10,14 +9,9 @@ import {
 } from "@repo/ui/index";
 import Image from "next/image";
 import Link from "next/link";
+import { signInWithGoogle } from "../lib/auth-client";
 
 const Signin = () => {
-  const router = useRouter();
-  const { status } = useSession();
-
-  if (status === "authenticated") {
-    router.push("/");
-  }
 
   return (
     <div className="min-h-screen w-full bg-black flex items-center justify-center p-4">
@@ -50,10 +44,7 @@ const Signin = () => {
 
         <CardContent className="space-y-6">
           <button
-            onClick={async () => {
-              await signIn("google");
-              router.push("/");
-            }}
+            onClick={signInWithGoogle}
             className="w-full flex items-center justify-center gap-3 px-4 py-3 bg-white hover:bg-gray-50 text-gray-900 font-medium rounded-md transition-colors"
           >
             <svg

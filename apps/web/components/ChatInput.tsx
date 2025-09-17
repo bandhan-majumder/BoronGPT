@@ -12,14 +12,12 @@ import {
 import { ArrowUp, Brain, Plus, ChevronDown } from "lucide-react";
 import React, { useEffect, useRef, useState } from "react";
 import { groupedModels, models } from "../prompts/helper/models";
-import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { usePromptStore } from "../providers/prompt-store-provider";
 import toast from 'react-hot-toast';
 
 function ChatInput() {
   const [message, setMessage] = useState<string>("");
-  const { status, data } = useSession();
   const router = useRouter();
 
   const setPrompt = usePromptStore((state) => state.setPrompt);
@@ -36,10 +34,6 @@ function ChatInput() {
 
   // route to playground if the user is authenticated.
   const onClickHandler = () => {
-    if (status === "unauthenticated") {
-      router.push("/auth");
-      return;
-    }
     if (!selectedModelData) {
       toast('😕 Please select a model first!', {
         style: {

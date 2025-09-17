@@ -1,17 +1,12 @@
-import { getServerSession } from "next-auth";
-import { authOptions } from "../../../../lib/auth";
 import prismaClient from "@repo/db/client";
 
 export async function GET() {
   try {
-    const session = await getServerSession(authOptions);
-    if (!session?.user) {
-      return new Response("Unauthorized", { status: 401 });
-    }
+    
 
     const orders = await prismaClient.subscription.findMany({
       where: {
-        userId: session.user.id,
+        userId: "12", // TODO: change this
       },
       orderBy: {
         createdAt: "desc",

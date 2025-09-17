@@ -1,15 +1,15 @@
-"use client";
 import Link from "next/link";
 import { Button } from "@repo/ui/index";
-import { signIn } from "next-auth/react";
-import { useSession } from "next-auth/react";
-import { useRouter } from "next/navigation";
+import { signInWithGoogle } from "../lib/auth-client";
 import UserAccountDropDown from "./UseAccountDropDown";
 import Image from "next/image";
+import { auth } from "../lib/auth";
+import { headers } from "next/headers";
 
-export const Header = () => {
-  const { status, data } = useSession();
-  const router = useRouter();
+export const Header = async () => {
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  })
 
   return (
     <nav className="mx-auto wrapper top-0 z-50 flex items-center gap-2 py-6 w-full">
@@ -27,21 +27,7 @@ export const Header = () => {
         </Link>
 
         <div className="flex items-center gap-4">
-          {status === "unauthenticated" ? (
-            <Button
-              size="lg"
-              variant={"default"}
-              className="p-2 bg-[#FEFCE8] border text-black rounded-xl cursor-pointer text-md"
-              onClick={async () => {
-                await signIn();
-                router.push("/");
-              }}
-            >
-              Login
-            </Button>
-          ) : (
-            <UserAccountDropDown />
-          )}
+          <UserAccountDropDown session={session}/>
         </div>
       </div>
     </nav>

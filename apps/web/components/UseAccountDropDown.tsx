@@ -8,13 +8,19 @@ import {
   DropdownMenuLabel,
   DropdownMenuTrigger,
 } from "@repo/ui/index";
-import { signOut, useSession } from "next-auth/react";
+import { signOut } from "../lib/server/auth-actions";
 import { LogOutIcon, UserRound } from "lucide-react";
 import { useRouter } from "next/navigation";
 import UserImage from "./UserImage";
+import { auth } from "../lib/auth";
 
-export default function UserAccountDropDown() {
-  const { data: session, status } = useSession();
+type SessionType = typeof auth.$Infer.Session;
+
+export default function UserAccountDropDown({
+  session
+}: {
+  session: SessionType | null
+}) {
   const user = session?.user;
   const router = useRouter();
   const [mounted, setMounted] = useState(false);
@@ -23,7 +29,7 @@ export default function UserAccountDropDown() {
     setMounted(true);
   }, []);
 
-  if (!mounted || status === "loading") return null;
+  if (!mounted) return null;
   if (!user) return null;
 
   return (
@@ -48,7 +54,7 @@ export default function UserAccountDropDown() {
                 "
           onClick={async () => {
             await signOut();
-            router.push("/");
+            router.push("/auth");
           }}
         >
           <LogOutIcon /> Logout

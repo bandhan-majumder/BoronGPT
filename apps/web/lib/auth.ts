@@ -1,51 +1,23 @@
-import GoogleProvider from "next-auth/providers/google";
-import { PrismaAdapter } from "@auth/prisma-adapter";
-import db from "@repo/db/client";
-import type { Adapter } from "next-auth/adapters";
-import { SessionStrategy } from "next-auth";
-import { GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, NEXTAUTH_SECRET } from "./config";
+import prismaClient from "@repo/db/client";
+import { betterAuth } from "better-auth";
+import { prismaAdapter } from "better-auth/adapters/prisma";
+import { GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET } from "./config";
 
-export const authOptions = {
-  adapter: PrismaAdapter(db) as Adapter,
-  providers: [
-    GoogleProvider({
-      clientId: GOOGLE_CLIENT_ID,
-      clientSecret: GOOGLE_CLIENT_SECRET,
-      allowDangerousEmailAccountLinking: true,
-    }),
-  ],
-  secret: NEXTAUTH_SECRET,
-  pages: {
-    signIn: "/auth",
+export const auth = betterAuth({
+  database: prismaAdapter(prismaClient, {
+    provider: "postgresql",
+  }),
+  rateLimit: {
+    enabled: true,
+    window: 10, // time window in seconds
+    max: 100, // max requests in the window
   },
-  session: { strategy: "jwt" as SessionStrategy },
-  callbacks: {
-    async jwt({ token, user, account }: any) {
-      if (account && user) {
-        return {
-          ...token,
-          accessToken: account.access_token,
-          sub: user.id,
-        };
-      }
-      return token;
-    },
-    async redirect({ url, baseUrl }: any) {
-      return baseUrl;
-    },
-    async session({ session, token }: any) {
-      if (token) {
-        const user = await db.user.findUnique({
-          where: {
-            id: token.sub,
-          },
-        });
-
-        session.user.id = token.sub;
-        session.accessToken = token.accessToken;
-        session.user.admin = user?.admin || false;
-      }
-      return session;
+  socialProviders: {
+    google: {
+      accessType: "offline",
+      prompt: "select_account consent",
+      clientId: GOOGLE_CLIENT_ID as string,
+      clientSecret: GOOGLE_CLIENT_SECRET as string,
     },
   },
-};
+});

@@ -1,16 +1,9 @@
-import { getServerSession } from "next-auth";
-import { authOptions } from "../../../../lib/auth";
 import prismaClient from "@repo/db/client";
 import { NextResponse } from "next/server";
 import { razorpay } from "../../../../lib/razorpay";
 
 export async function POST(request: Request) {
   try {
-    const session = await getServerSession(authOptions);
-    if (!session) {
-      return new Response("Unauthorized", { status: 401 });
-    }
-
     const { productId, variant } = await request.json();
 
     const price = 100; // fetch price from database
@@ -27,7 +20,7 @@ export async function POST(request: Request) {
 
     const newOrder = await prismaClient.subscription.create({
       data: {
-        userId: session.user.id,
+        userId: "12", // TODO: change this
         razorpayOrderId: order.id,
         subscriptionType: "MonthlyIndividual", // change based on param
         amount: price,
