@@ -17,14 +17,11 @@ import {
   SidebarRail,
 } from "@/components/ui/sidebar"
 import { NavUser } from "./nav-user"
+import { auth } from "@/lib/auth";
+import { headers } from "next/headers";
 
 // This is sample data.
 const data = {
-  user: {
-    name: "Bandhan",
-    email: "bandhanmajumder16@gmail.com",
-    avatar: "/avatars/random.jpg",
-  },
   teams: [
     {
       name: "Acme Inc",
@@ -145,7 +142,10 @@ const data = {
   ],
 }
 
-export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+export async function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  })
   return (
     <Sidebar variant="floating" {...props} className="bg-[#181818] border-none">
       <SidebarHeader className="bg-[#181818] border-none text-white">
@@ -155,14 +155,14 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
               <a href="#">
                 <div className="bg-sidebar-primary text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-lg">
                   <Image
-                                crossOrigin="anonymous"
-                                src={"/icon.svg"}
-                                width={60}
-                                height={60}
-                                alt="logo"
-                                style={{ transform: "rotate(35deg)" }}
-                                className="rounded-full"
-                              />
+                    crossOrigin="anonymous"
+                    src={"/icon.svg"}
+                    width={60}
+                    height={60}
+                    alt="logo"
+                    style={{ transform: "rotate(35deg)" }}
+                    className="rounded-full"
+                  />
                 </div>
                 <div className="flex flex-col gap-0.5 leading-none">
                   <span className="font-medium">BoronGPT</span>
@@ -205,7 +205,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         </SidebarGroup>
       </SidebarContent>
       <SidebarFooter className="bg-[#181818] text-white hover:bg-gray-900 hover:text-white">
-        <NavUser user={data.user} />
+        <NavUser session={session} />
       </SidebarFooter>
       <SidebarRail />
     </Sidebar>
