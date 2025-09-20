@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import crypto from "crypto";
 import prismaClient from "@repo/db/client";
 import { transporter } from "../../../../lib/email";

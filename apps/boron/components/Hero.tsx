@@ -1,6 +1,5 @@
 import React from "react";
 import ChatInput from "./ChatInput";
-import Image from "next/image";
 
 function Hero() {
   return (

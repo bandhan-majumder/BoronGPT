@@ -46,17 +46,17 @@ export function filterStepsToFiles(steps: Step[]) {
       if (step?.type === StepType.CreateFile && step.filePath) {
         let parsedPath = step.filePath?.split("/") ?? []; // ["src", "components", "App.tsx"]
         let currentFileStructure = [...originalFiles]; // {}
-        let finalAnswerRef = currentFileStructure;
+        const finalAnswerRef = currentFileStructure;
 
         let currentFolder = "";
         while (parsedPath.length) {
           currentFolder = `${currentFolder}/${parsedPath[0]}`;
-          let currentFolderName = parsedPath[0];
+          const currentFolderName = parsedPath[0];
           parsedPath = parsedPath.slice(1);
 
           if (!parsedPath.length) {
             // final file
-            let file = currentFileStructure.find(
+            const file = currentFileStructure.find(
               (x) => x.path === currentFolder,
             );
             if (!file) {
@@ -71,7 +71,7 @@ export function filterStepsToFiles(steps: Step[]) {
             }
           } else {
             /// in a folder
-            let folder = currentFileStructure.find(
+            const folder = currentFileStructure.find(
               (x) => x.path === currentFolder,
             );
             if (!folder) {

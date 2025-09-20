@@ -1,6 +1,4 @@
 import Link from "next/link";
-import { Button } from "./index";
-import { signInWithGoogle } from "../lib/auth-client";
 import UserAccountDropDown from "./UseAccountDropDown";
 import Image from "next/image";
 import { auth } from "../lib/auth";

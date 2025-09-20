@@ -51,9 +51,7 @@ function PricingPage() {
 
   return (
     <div className="min-h-screen bg-black text-white">
-      {/* Main Content */}
       <main className="max-w-7xl mx-auto px-6 py-16">
-        {/* Hero Section */}
         <div className="text-center mb-16">
           <h1 className="text-4xl md:text-6xl font-bold mb-6">
             Simple, Transparent Pricing
@@ -64,9 +62,8 @@ function PricingPage() {
           </p>
         </div>
 
-        {/* Pricing Cards */}
         <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
-          {plans.map((plan, index) => (
+          {plans.map((plan) => (
             <div
               key={plan.name}
               className={`relative p-8 rounded-2xl border ${
@@ -119,7 +116,6 @@ function PricingPage() {
           ))}
         </div>
 
-        {/* FAQ Section */}
         <div className="mt-20 max-w-3xl mx-auto">
           <h2 className="text-3xl font-bold text-center mb-12">
             Frequently Asked Questions
@@ -139,8 +135,8 @@ function PricingPage() {
                 What happens to my apps if I downgrade?
               </h3>
               <p className="text-gray-300">
-                Your existing apps will continue to work. You'll just be limited
-                by your new plan's features for future apps.
+                Your existing apps will continue to work. You&apos;ll just be limited
+                by your new plan&apos;s features for future apps.
               </p>
             </div>
             <div className="border-b border-gray-700 pb-6">

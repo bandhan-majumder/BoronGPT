@@ -15,10 +15,8 @@ import Image from "next/image";
 
 export default function EditorScreen({
   initialSteps,
-  prompt,
 }: {
   initialSteps: StepAfterConvert[];
-  prompt: string;
 }) {
   const [currentStep, setCurrentStep] = useState(1);
   const [steps, setSteps] = useState<Step[]>([]);
@@ -47,7 +45,9 @@ export default function EditorScreen({
   useEffect(() => {
     if (!webcontainer || files.length === 0) return;
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const createMountStructure = (files: FileItem[]): Record<string, any> => {
+       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const mountStructure: Record<string, any> = {};
 
       const processFile = (file: FileItem, isRootFolder: boolean) => {

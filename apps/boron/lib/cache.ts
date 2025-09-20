@@ -14,6 +14,7 @@ export class CacheService {
    * Generate a consistent cache key for Claude API requests
    */
   private generateCacheKey(
+     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     messages: any[],
     model: string,
     systemPrompt: string,
@@ -43,6 +44,7 @@ export class CacheService {
    * Get cached response for similar queries
    */
   async getCachedResponse(
+     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     messages: any[],
     model: string,
     systemPrompt: string,
@@ -77,6 +79,7 @@ export class CacheService {
    * Cache the Claude API response
    */
   async setCachedResponse(
+     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     messages: any[],
     model: string,
     systemPrompt: string,

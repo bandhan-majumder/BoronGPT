@@ -111,7 +111,7 @@ export default function PlayGround() {
 
   return (
     <Suspense fallback={<div>loading..</div>}>
-      {initialSteps && <EditorScreen initialSteps={initialSteps} prompt={prompt} />}
+      {initialSteps && <EditorScreen initialSteps={initialSteps} />}
     </Suspense>
   );
 }
