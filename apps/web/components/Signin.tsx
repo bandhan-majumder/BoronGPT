@@ -14,8 +14,8 @@ import { signInWithGoogle } from "../lib/auth-client";
 const Signin = () => {
 
   return (
-    <div className="min-h-screen w-full bg-black flex items-center justify-center p-4">
-      <Card className="w-full max-w-md bg-gray-900 border-gray-800">
+    <div className="h-screen w-full bg-black flex items-center justify-center p-4">
+      <Card className="w-md bg-[#191A1A] border-[#FEFCE8]">
         <CardHeader className="text-center space-y-4">
           <Link
             href={"/"}
@@ -33,11 +33,13 @@ const Signin = () => {
           </Link>
 
           <div className="space-y-2">
-            <CardTitle className="text-2xl text-gray-200">Welcome to</CardTitle>
+            <CardTitle className="text-2xl text-gray-200" style={{
+              fontStyle: "italic"
+            }}>Welcome to</CardTitle>
             <div className="text-3xl font-bold text-[#FEFCE8]">BoronGPT</div>
           </div>
 
-          <CardDescription className="text-gray-400">
+          <CardDescription className="text-gray-300">
             Prompt. Edit. Ship. Faster than you can imagine.
           </CardDescription>
         </CardHeader>
@@ -45,12 +47,12 @@ const Signin = () => {
         <CardContent className="space-y-6">
           <button
             onClick={signInWithGoogle}
-            className="w-full flex items-center justify-center gap-3 px-4 py-3 bg-white hover:bg-gray-50 text-gray-900 font-medium rounded-md transition-colors"
+            className="w-full flex items-center justify-center gap-3 px-2 py-2 bg-[#FEFCE8] text-gray-900 font-medium rounded-md transition-colors text-md"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 30 30"
-              className="w-5 h-5"
+              className="w-8 h-8"
             >
               <path
                 fill="#4285F4"

@@ -1,6 +1,5 @@
 import React from "react";
 import { Check } from "lucide-react";
-import { Header } from "../../components/Header";
 
 function PricingPage() {
   const plans = [
@@ -52,7 +51,6 @@ function PricingPage() {
 
   return (
     <div className="min-h-screen bg-black text-white">
-      <Header />
       {/* Main Content */}
       <main className="max-w-7xl mx-auto px-6 py-16">
         {/* Hero Section */}
